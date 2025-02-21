@@ -3,7 +3,7 @@
 Event Organizer Booking Application
 
 ## Application Name:
-[Event Organizer] Application
+[Event Organizer] Mobile & Web Application
 
 ## Members:  
 2210511039 - Danendra Helmy Pratama  
