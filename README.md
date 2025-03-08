@@ -16,7 +16,7 @@ Event Organizer Booking Application
 
 **For detailed information about the project, check out our wiki [here](https://github.com/dhifanrazaqa/Kelompok-2-SOA/wiki)!**
 
-### Installation
+## Installation
 
 1. Clone the repository:
 
