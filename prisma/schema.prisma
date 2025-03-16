@@ -14,57 +14,64 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String?
-  email     String? @unique
+  email     String?  @unique
   password  String?
-  isAdmin   Boolean @default(false)
-  createdAt DateTime @default(now())
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  bookings  Booking[]
+  bookings Booking[]
 }
 
 model EventPackage {
-  id           String       @id @default(uuid())
+  id           String   @id @default(uuid())
   priceRangeId String
   eventTypeId  String
   name         String?
   description  String?
   benefits     String?
-  createdAt    DateTime @default(now())
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-  priceRange   PriceRange @relation(fields: [priceRangeId], references: [id])
-  eventType    EventType  @relation(fields: [eventTypeId], references: [id])
-  bookings     Booking[]
+  priceRange PriceRange @relation(fields: [priceRangeId], references: [id])
+  eventType  EventType  @relation(fields: [eventTypeId], references: [id])
+  bookings   Booking[]
 }
 
 model PriceRange {
-  id    String    @id @default(uuid())
-  range String @unique
+  id        String   @id @default(uuid())
+  range     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   eventPackages EventPackage[]
 }
 
 model EventType {
-  id    String    @id @default(uuid())
-  name  String @unique
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   eventPackages EventPackage[]
 }
 
 model Booking {
-  id             String       @id @default(uuid())
+  id             String   @id @default(uuid())
   userId         String
   eventId        String
   organizationId String
   eventName      String?
   eventLocation  String?
   status         Status   @default(Pending)
-  createdAt      DateTime @default(now())
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 
-  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  eventPackage  EventPackage @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  organization  Organization @relation(fields: [organizationId], references: [id])
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventPackage EventPackage @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id])
 }
 
 enum Status {
@@ -75,11 +82,13 @@ enum Status {
 }
 
 model Organization {
-  id            String     @id @default(uuid())
-  name          String  @unique
+  id            String   @id @default(uuid())
+  name          String   @unique
   contactPerson String?
   contactPhone  String?
   contactEmail  String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
-  bookings      Booking[]
+  bookings Booking[]
 }

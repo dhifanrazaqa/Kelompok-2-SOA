@@ -4,9 +4,20 @@ const prisma = new PrismaClient();
 const getAllPriceRanges = async (req, res) => {
   try {
     const priceRanges = await prisma.priceRange.findMany();
-    res.json(priceRanges);
+    sendSuccess(res, "Price Ranges retrieved successfully", priceRanges);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve price ranges" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve price ranges",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the price ranges",
+        },
+      ],
+      500
+    );
   }
 };
 
@@ -18,12 +29,28 @@ const getPriceRangeById = async (req, res) => {
     });
 
     if (!priceRange) {
-      return res.status(404).json({ error: "Price range not found" });
+      return sendError(res, "Price range not found", [
+        {
+          field: "id",
+          message: "Price range with the provided ID does not exist",
+        },
+      ]);
     }
 
-    res.json(priceRange);
+    sendSuccess(res, "Price range retrieved successfully", priceRange);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve price range" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve price range",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the price range",
+        },
+      ],
+      500
+    );
   }
 };
 
@@ -34,9 +61,20 @@ const createPriceRange = async (req, res) => {
       data: { range },
     });
 
-    res.status(201).json(priceRange);
+    sendSuccess(res, "Price range created successfully", priceRange);
   } catch (error) {
-    res.status(500).json({ error: "Failed to create price range" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve price range",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the price range",
+        },
+      ],
+      500
+    );
   }
 };
 
@@ -45,14 +83,37 @@ const updatePriceRange = async (req, res) => {
     const { id } = req.params;
     const { range } = req.body;
 
+    const existingPrice = await prisma.priceRange.findUnique({
+      where: { id },
+    });
+
+    if (!existingPrice)
+      return sendError(res, "Price range not found", [
+        {
+          field: "id",
+          message: "Price range with the provided ID does not exist",
+        },
+      ]);
+
     const priceRange = await prisma.priceRange.update({
       where: { id },
       data: { range },
     });
 
-    res.json(priceRange);
+    sendSuccess(res, "Price range updated successfully", priceRange);
   } catch (error) {
-    res.status(500).json({ error: "Failed to update price range" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to update price range",
+      [
+        {
+          field: "server",
+          message: "An error occurred while updating the price range",
+        },
+      ],
+      500
+    );
   }
 };
 
@@ -60,20 +121,43 @@ const deletePriceRange = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const existingPrice = await prisma.priceRange.findUnique({
+      where: { id },
+    });
+
+    if (!existingPrice)
+      return sendError(res, "Price range not found", [
+        {
+          field: "id",
+          message: "Price range with the provided ID does not exist",
+        },
+      ]);
+
     await prisma.priceRange.delete({
       where: { id },
     });
 
-    res.json({ message: "Price range deleted successfully" });
+    sendSuccess(res, "Price range deleted successfully", null);
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete price range" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to delete price range",
+      [
+        {
+          field: "server",
+          message: "An error occurred while deleting the price range",
+        },
+      ],
+      500
+    );
   }
 };
 
 module.exports = {
-    getAllPriceRanges,
-    getPriceRangeById,
-    createPriceRange,
-    updatePriceRange,
-    deletePriceRange,
-}
+  getAllPriceRanges,
+  getPriceRangeById,
+  createPriceRange,
+  updatePriceRange,
+  deletePriceRange,
+};

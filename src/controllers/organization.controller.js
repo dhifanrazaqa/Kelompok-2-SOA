@@ -1,58 +1,121 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require("../config/database");
+const { sendSuccess, sendError } = require("../utils/response");
 
 const getAllOrganizations = async (req, res) => {
   try {
     const organizations = await prisma.organization.findMany();
-    res.json(organizations);
+    sendSuccess(res, "Organizations retrieved successfully", organizations);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve organizations" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve organizations",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the organizations",
+        },
+      ],
+      500
+    );
   }
 };
 
 const getOrganizationById = async (req, res) => {
   try {
     const { id } = req.params;
+
     const organization = await prisma.organization.findUnique({
       where: { id },
     });
 
     if (!organization) {
-      return res.status(404).json({ error: "Organization not found" });
+      return sendError(res, "Organization not found", [
+        {
+          field: "id",
+          message: "Organization with the provided ID does not exist",
+        },
+      ]);
     }
 
-    res.json(organization);
+    sendSuccess(res, "Organization retrieved successfully", organization);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve organization" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve organization",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the organization",
+        },
+      ],
+      500
+    );
   }
 };
 
 const createOrganization = async (req, res) => {
   try {
-    const { name, contactPerson, contactPhone, contactEmail } = req.body;
+    const orgData = req.body;
+
     const organization = await prisma.organization.create({
-      data: { name, contactPerson, contactPhone, contactEmail },
+      data: orgData,
     });
 
-    res.status(201).json(organization);
+    sendSuccess(res, "Organization created successfully", organization);
   } catch (error) {
-    res.status(500).json({ error: "Failed to create organization" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve organization",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the organization",
+        },
+      ],
+      500
+    );
   }
 };
 
 const updateOrganization = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, contactPerson, contactPhone, contactEmail } = req.body;
+    const orgData = req.body;
 
-    const organization = await prisma.organization.update({
+    const existingOrg = await prisma.organization.findUnique({
       where: { id },
-      data: { name, contactPerson, contactPhone, contactEmail },
     });
 
-    res.json(organization);
+    if (!existingOrg)
+      return sendError(res, "Organization not found", [
+        {
+          field: "id",
+          message: "Organization with the provided ID does not exist",
+        },
+      ]);
+
+    const updatedOrg = await prisma.organization.update({
+      where: { id },
+      data: orgData,
+    });
+
+    sendSuccess(res, "Organization updated successfully", updatedOrg);
   } catch (error) {
-    res.status(500).json({ error: "Failed to update organization" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to update organization",
+      [
+        {
+          field: "server",
+          message: "An error occurred while updating the organizaiton",
+        },
+      ],
+      500
+    );
   }
 };
 
@@ -60,20 +123,43 @@ const deleteOrganization = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const existingOrg = await prisma.organization.findUnique({
+      where: { id },
+    });
+
+    if (!existingOrg)
+      return sendError(res, "Organization not found", [
+        {
+          field: "id",
+          message: "Organization with the provided ID does not exist",
+        },
+      ]);
+
     await prisma.organization.delete({
       where: { id },
     });
 
-    res.json({ message: "Organization deleted successfully" });
+    sendSuccess(res, "Organization deleted successfully", null);
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete organization" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to delete organization",
+      [
+        {
+          field: "server",
+          message: "An error occurred while deleting the organization",
+        },
+      ],
+      500
+    );
   }
 };
 
 module.exports = {
-    getAllOrganizations,
-    getOrganizationById,
-    createOrganization,
-    updateOrganization,
-    deleteOrganization,
+  getAllOrganizations,
+  getOrganizationById,
+  createOrganization,
+  updateOrganization,
+  deleteOrganization,
 };

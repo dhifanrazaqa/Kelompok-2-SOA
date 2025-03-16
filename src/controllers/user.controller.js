@@ -1,59 +1,150 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const { sendSuccess, sendError } = require("../utils/response");
+const prisma = require("../config/database");
 
 const getAllUsers = async (req, res) => {
-  const users = await prisma.user.findMany();
-  res.json(users);
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        isAdmin: true,
+      },
+    });
+    sendSuccess(res, "Users retrieved successfully", users);
+  } catch (error) {
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve user",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the user",
+        },
+      ],
+      500
+    );
+  }
 };
 
 const getUserById = async (req, res) => {
-  const user = await prisma.user.findUnique({
-    where: { id: req.params.id },
-  });
-  if (!user) return res.status(404).json({ error: "User not found" });
-  res.json(user);
-};
-
-const createUser = async (req, res) => {
-  const { name, email, password, isAdmin } = req.body;
   try {
-    const user = await prisma.user.create({
-      data: { name, email, password, isAdmin },
+    const { id } = req.params;
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        isAdmin: true,
+        bookings: true,
+      },
     });
-    res.json(user);
+
+    if (!user)
+      return sendError(res, "User not found", [
+        { field: "id", message: "User with the provided ID does not exist" },
+      ]);
+
+    sendSuccess(res, "User retrieved successfully", user);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve user",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the user",
+        },
+      ],
+      500
+    );
   }
 };
 
 const updateUser = async (req, res) => {
-  const { name, email, password, isAdmin } = req.body;
   try {
-    const user = await prisma.user.update({
+    const { id } = req.params;
+    const userData = req.body;
+
+    const user = await prisma.user.findUnique({
       where: { id: req.params.id },
-      data: { name, email, password, isAdmin },
     });
-    res.json(user);
+
+    if (!user)
+      return sendError(res, "User not found", [
+        { field: "id", message: "User with the provided ID does not exist" },
+      ]);
+
+    const { email, password, ...safeUserData } = userData;
+
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: safeUserData,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        isAdmin: true,
+      },
+    });
+
+    sendSuccess(res, "User updated successfully", updatedUser);
   } catch (error) {
-    res.status(404).json({ error: "User not found" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to update user",
+      [
+        {
+          field: "server",
+          message: "An error occurred while updating the user",
+        },
+      ],
+      500
+    );
   }
 };
 
 const deleteUser = async (req, res) => {
   try {
-    await prisma.user.delete({
+    const { id } = req.params;
+
+    const user = await prisma.user.findUnique({
       where: { id: req.params.id },
     });
-    res.json({ message: "User deleted" });
+
+    if (!user)
+      return sendError(res, "User not found", [
+        { field: "id", message: "User with the provided ID does not exist" },
+      ]);
+
+    await prisma.user.delete({
+      where: { id },
+    });
+
+    sendSuccess(res, "User deleted successfully", null);
   } catch (error) {
-    res.status(404).json({ error: "User not found" });
+    console.error(error);
+    sendError(
+      res,
+      "Failed to delete user",
+      [
+        {
+          field: "server",
+          message: "An error occurred while deleting the user",
+        },
+      ],
+      500
+    );
   }
 };
 
 module.exports = {
   getAllUsers,
   getUserById,
-  createUser,
   updateUser,
   deleteUser,
 };
