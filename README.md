@@ -1,13 +1,10 @@
 # Kelompok-2-SOA
 
-## Note:
-**[] = Placeholder**
-
 ## Case:  
 Event Organizer Booking Application
 
 ## Application Name:
-[Event Organizer] Web Application
+Memorika Stories Web Application
 
 ## Members:  
 2210511039 - Danendra Helmy Pratama  
