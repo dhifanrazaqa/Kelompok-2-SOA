@@ -1,10 +1,12 @@
 const express = require("express");
 const routes = require("./routes");
 const { sendError } = require("./utils/response")
+const { swaggerUi, specs } = require('../swagger');
 
 const app = express();
 app.use(express.json());
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api", routes);
 
 app.use((req, res) => {
@@ -35,4 +37,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Swagger docs at http://localhost:${PORT}/api-docs`);
 });

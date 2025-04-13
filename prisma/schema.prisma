@@ -14,81 +14,193 @@ datasource db {
 }
 
 model User {
+  id          String        @id @default(uuid())
+  name        String
+  email       String        @unique
+  password    String
+  phone       String?
+  address     String
+  organizer   Organizer?
+  role        Role
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  OrderTicker OrderTicket[]
+  OrderEvent  OrderEvent[]
+}
+
+model Organizer {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id])
+  organizationName String
+  contactName      String
+  contactPhone     String
+  contactEmail     String
+  events           Event[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Event {
+  id          String        @id @default(uuid())
+  title       String
+  type        EventType
+  target      EventTarget
+  budgetRange BudgetRange
+  organizerId String
+  organizer   Organizer     @relation(fields: [organizerId], references: [id])
+  thumbnail   String?
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  picName     String?
+  picPhone    String?
+  picEmail    String?
+  status      EventStatus   @default(CONCEPTING)
+  venue       Venue?
+  checklist   Checklist[]
+  documents   Document[]
+  tickets     Ticket[]
+  finance     Finance?
+  OrderTicker OrderTicket[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  OrderEvent  OrderEvent[]
+}
+
+model Venue {
   id        String   @id @default(uuid())
-  name      String?
-  email     String?  @unique
-  password  String?
-  isAdmin   Boolean  @default(false)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  bookings Booking[]
+  eventId   String   @unique
+  name      String
+  address   String
+  city      String
+  capacity  Int
+  latitude  Decimal
+  longitude Decimal
+  event     Event    @relation(fields: [eventId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model EventPackage {
-  id           String   @id @default(uuid())
-  priceRangeId String
-  eventTypeId  String
-  name         String?
-  description  String?
-  benefits     String?
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-
-  priceRange PriceRange @relation(fields: [priceRangeId], references: [id])
-  eventType  EventType  @relation(fields: [eventTypeId], references: [id])
-  bookings   Booking[]
+model Checklist {
+  id         String   @id @default(uuid())
+  eventId    String   
+  title      String
+  description String?
+  progress   Int
+  event      Event    @relation(fields: [eventId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
-model PriceRange {
-  id        String   @id @default(uuid())
-  range     String   @unique
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  eventPackages EventPackage[]
+model Document {
+  id         String   @id @default(uuid())
+  eventId    String
+  name       String
+  url        String
+  event      Event    @relation(fields: [eventId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
-model EventType {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  eventPackages EventPackage[]
-}
-
-model Booking {
-  id             String   @id @default(uuid())
-  userId         String
-  eventId        String
-  organizationId String
-  eventName      String?
-  eventLocation  String?
-  status         Status   @default(Pending)
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  eventPackage EventPackage @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  organization Organization @relation(fields: [organizationId], references: [id])
-}
-
-enum Status {
-  Pending
-  Confirmed
-  Completed
-  Cancelled
-}
-
-model Organization {
+model Finance {
   id            String   @id @default(uuid())
-  name          String   @unique
-  contactPerson String?
-  contactPhone  String?
-  contactEmail  String?
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  eventId       String   @unique
+  projected     Float
+  target        Float
+  sponsor       Float
+  ticketRevenue Float
+  event         Event    @relation(fields: [eventId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
 
-  bookings Booking[]
+model Ticket {
+  id          String        @id @default(uuid())
+  eventId     String
+  event       Event         @relation(fields: [eventId], references: [id])
+  name        String
+  price       Float
+  quota       Int
+  sold        Int
+  description String?
+  OrderTicker OrderTicket[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model OrderTicket {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  ticketId      String
+  ticket        Ticket        @relation(fields: [ticketId], references: [id])
+  eventId       String
+  event         Event         @relation(fields: [eventId], references: [id])
+  quantity      Int
+  totalPrice    Decimal
+  paymentStatus paymentStatus
+  orderStatus   orderStatus
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model OrderEvent {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  eventId       String
+  event         Event         @relation(fields: [eventId], references: [id])
+  title         String
+  description   String?
+  totalPrice    Decimal
+  paymentStatus paymentStatus
+  orderStatus   orderStatus
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum Role {
+  PARTICIPANT
+  ORGANIZER
+  ADMIN
+}
+
+enum EventType {
+  KONSER
+  PARTY
+  SEMINAR
+  LAINNYA
+}
+
+enum EventTarget {
+  PRIVATE
+  PUBLIC
+}
+
+enum BudgetRange {
+  FIVE_TO_TEN
+  TEN_TO_TWENTY
+  TWENTY_TO_THIRTYFIVE
+  TENTATIVE
+}
+
+enum EventStatus {
+  CONCEPTING
+  PRODUCTION
+  TICKETING
+  ONGOING
+}
+
+enum paymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum orderStatus {
+  NEW
+  CONFIRMED
+  CANCELLED
 }

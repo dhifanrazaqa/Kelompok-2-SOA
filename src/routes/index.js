@@ -2,19 +2,29 @@ const express = require("express");
 const userRoutes = require("./user.routes");
 const authRoutes = require("./auth.routes");
 const organizationRoutes = require("./organization.routes");
-const priceRangeRoutes = require("./pricerange.routes");
-const eventPackageRoutes = require("./eventPackage.routes");
-const eventTypeRoutes = require("./eventType.routes");
-const bookingRoutes = require("./booking.routes");
+const eventRoutes = require("./event.routes");
+const venueRoutes = require("./venue.routes");
+const checklistRoutes = require("./checklist.route");
+const dcoumentRoutes = require("./document.routes");
+const financeRoutes = require("./finance.routes");
+const ticketRoutes = require("./ticket.routes");
+const orderTicketRoutes = require("./orderTicket.routes");
+const orderEventRoutes = require("./orderEvent.routes");
+const cacheRoutes = require("./cache.routes");
 
 const router = express.Router();
 
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
-router.use("/organizations", organizationRoutes);
-router.use("/pricerange", priceRangeRoutes);
-router.use("/eventTypes", eventTypeRoutes);
-router.use("/eventPackages", eventPackageRoutes);
-router.use("/bookings", bookingRoutes);
+router.use("/organizer", organizationRoutes);
+router.use("/event/order", orderEventRoutes);
+router.use("/events", eventRoutes);
+router.use("/venue", venueRoutes);
+router.use("/checklist", checklistRoutes);
+router.use("/document", dcoumentRoutes);
+router.use("/finance", financeRoutes);
+router.use("/ticket/order", orderTicketRoutes);
+router.use("/ticket", ticketRoutes);
+router.use("/cache", cacheRoutes);
 
 module.exports = router;

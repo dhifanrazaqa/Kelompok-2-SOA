@@ -5,7 +5,7 @@ const { generateToken } = require("../utils/token");
 
 const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone, address, role } = req.body;
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -24,7 +24,7 @@ const register = async (req, res) => {
     const hashedPassword = await hashPassword(password);
 
     await prisma.user.create({
-      data: { name, email, password: hashedPassword, isAdmin: false },
+      data: { name, email, password: hashedPassword, phone, address, role },
     });
 
     sendSuccess(res, "User created successfully", null);
@@ -32,11 +32,11 @@ const register = async (req, res) => {
     console.error(error);
     sendError(
       res,
-      "Failed to retrieve user",
+      "Failed to create user",
       [
         {
           field: "server",
-          message: "An error occurred while retrieving the user",
+          message: "An error occurred while creating user",
         },
       ],
       500
@@ -81,5 +81,5 @@ const login = async (req, res) => {
 
 module.exports = {
   register,
-  login
+  login,
 };
