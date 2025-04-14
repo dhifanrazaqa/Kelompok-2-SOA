@@ -1,9 +1,12 @@
 const prisma = require("../config/database");
+const redis = require("../config/redis");
 const { sendSuccess, sendError } = require("../utils/response");
 
 const getAllEvents = async (req, res) => {
   try {
+    const cacheKey = "events";
     const events = await prisma.event.findMany();
+    await redis.set(cacheKey, JSON.stringify(events), "EX", 60);
     sendSuccess(res, "Events retrieved successfully", events);
   } catch (error) {
     console.error(error);
@@ -14,6 +17,9 @@ const getAllEvents = async (req, res) => {
 const getEventById = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const cacheKey = `event:${id}`;
+
     const event = await prisma.event.findUnique({
       where: { id },
       include: {
@@ -64,7 +70,11 @@ const getEventById = async (req, res) => {
         },
       },
     });
+
     if (!event) return sendError(res, "Event not found", [], 404);
+
+    await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
+
     sendSuccess(res, "Event retrieved successfully", event);
   } catch (error) {
     console.error(error);
@@ -75,6 +85,9 @@ const getEventById = async (req, res) => {
 const getEventTickets = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const cacheKey = `event:${id}:tickets`;
+
     const event = await prisma.event.findUnique({
       where: { id },
       include: {
@@ -93,6 +106,8 @@ const getEventTickets = async (req, res) => {
 
     if (!event) return sendError(res, "Event not found", [], 404);
 
+    await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
+
     sendSuccess(res, "Event with tickets retrieved successfully", event);
   } catch (error) {
     console.error(error);
@@ -103,6 +118,9 @@ const getEventTickets = async (req, res) => {
 const getEventChecklist = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const cacheKey = `event:${id}:checklist`;
+
     const event = await prisma.event.findUnique({
       where: { id },
       include: {
@@ -119,6 +137,8 @@ const getEventChecklist = async (req, res) => {
 
     if (!event) return sendError(res, "Event not found", [], 404);
 
+    await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
+
     sendSuccess(res, "Event with checklist retrieved successfully", event);
   } catch (error) {
     console.error(error);
@@ -129,6 +149,9 @@ const getEventChecklist = async (req, res) => {
 const getEventDocuments = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const cacheKey = `event:${id}:documents`;
+
     const event = await prisma.event.findUnique({
       where: { id },
       include: {
@@ -143,6 +166,8 @@ const getEventDocuments = async (req, res) => {
     });
 
     if (!event) return sendError(res, "Event not found", [], 404);
+
+    await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
 
     sendSuccess(res, "Event with documents retrieved successfully", event);
   } catch (error) {
@@ -188,6 +213,8 @@ const getEventParticipants = async (req, res) => {
 
 const getMostPopularEvents = async (req, res) => {
   try {
+    const cacheKey = "event:popular";
+
     const events = await prisma.event.findMany({
       include: {
         tickets: {
@@ -204,15 +231,25 @@ const getMostPopularEvents = async (req, res) => {
     });
 
     const sortedEvents = events
-      .map(event => ({
+      .map((event) => ({
         ...event,
-        totalTicketsSold: event.tickets.reduce((sum, ticket) => sum + ticket.sold, 0),
+        totalTicketsSold: event.tickets.reduce(
+          (sum, ticket) => sum + ticket.sold,
+          0
+        ),
       }))
       .sort((a, b) => b.totalTicketsSold - a.totalTicketsSold);
 
-    if (sortedEvents.length === 0) return sendError(res, "No events found", [], 404);
+    if (sortedEvents.length === 0)
+      return sendError(res, "No events found", [], 404);
 
-    sendSuccess(res, "Most popular events retrieved successfully", sortedEvents);
+    await redis.set(cacheKey, JSON.stringify(sortedEvents), "EX", 60);
+
+    sendSuccess(
+      res,
+      "Most popular events retrieved successfully",
+      sortedEvents
+    );
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to retrieve most popular events", error, 500);

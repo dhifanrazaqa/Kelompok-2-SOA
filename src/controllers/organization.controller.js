@@ -1,4 +1,5 @@
 const prisma = require("../config/database");
+const redis = require("../config/redis");
 const { sendSuccess, sendError } = require("../utils/response");
 
 const getAllOrganizations = async (req, res) => {
@@ -25,6 +26,8 @@ const getOrganizationById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const cacheKey = `organizer:${id}`;
+
     const organization = await prisma.organizer.findUnique({
       where: { id },
     });
@@ -37,6 +40,8 @@ const getOrganizationById = async (req, res) => {
         },
       ]);
     }
+
+    await redis.set(cacheKey, JSON.stringify(organization), 'EX', 60);
 
     sendSuccess(res, "Organization retrieved successfully", organization);
   } catch (error) {
@@ -231,6 +236,8 @@ const getOrganizerTopEvent = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const cacheKey = `organizer:${id}:top-event`;
+
     const organizer = await prisma.organizer.findUnique({
       where: { id },
       include: {
@@ -270,6 +277,8 @@ const getOrganizerTopEvent = async (req, res) => {
           }
         : null,
     };
+
+    await redis.set(cacheKey, JSON.stringify(result), 'EX', 60);
 
     sendSuccess(res, "Organizer with top event retrieved successfully", result);
   } catch (error) {

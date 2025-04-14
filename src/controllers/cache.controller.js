@@ -125,8 +125,374 @@ const deleteUserCache = async (req, res) => {
   }
 };
 
+const createEvent = async (req, res) => {
+  try {
+    const {
+      title,
+      type,
+      target,
+      budgetRange,
+      organizerId,
+      thumbnail,
+      description,
+      startDate,
+      endDate,
+      picName,
+      picPhone,
+      picEmail,
+      status,
+    } = req.body;
+
+    const existingOrg = await prisma.organizer.findUnique({
+      where: { id: organizerId },
+    });
+
+    if (!existingOrg)
+      return sendError(res, "Organization not found", [
+        {
+          field: "id",
+          message: "Organization with the provided ID does not exist",
+        },
+      ]);
+
+    const event = await prisma.event.create({
+      data: {
+        title,
+        type,
+        target,
+        budgetRange,
+        organizerId,
+        thumbnail,
+        description,
+        startDate,
+        endDate,
+        picName,
+        picPhone,
+        picEmail,
+        status,
+      },
+    });
+
+    const cacheKey = `event:${event.id}`;
+    await redis.set(cacheKey, JSON.stringify(event), "EX", 3600);
+
+    sendSuccess(res, "Event created successfully", null);
+  } catch (error) {
+    console.error(error);
+    sendError(res, "Failed to create event", error, 500);
+  }
+};
+
+const getEventByIdCache = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cacheKey = `event:${id}`;
+    const cachedData = await redis.get(cacheKey);
+
+    if (cachedData) {
+      const event = JSON.parse(cachedData);
+      return sendSuccess(res, "Event retrieved successfully from cache", event);
+    }
+
+    sendError(
+      res,
+      "Cache not found",
+      [{ field: "cache", message: "No cached data available for this event" }],
+      404
+    );
+  } catch (error) {
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve event from cache",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the event from cache",
+        },
+      ],
+      500
+    );
+  }
+};
+
+const getAllEventsCache = async (req, res) => {
+  try {
+    const cacheKey = `events`;
+    const cachedData = await redis.get(cacheKey);
+
+    if (cachedData) {
+      const events = JSON.parse(cachedData);
+      return sendSuccess(res, "Events retrieved successfully from cache", events);
+    }
+
+    sendError(
+      res,
+      "Cache not found",
+      [{ field: "cache", message: "No cached data available for events" }],
+      404
+    );
+  } catch (error) {
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve events from cache",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving events from cache",
+        },
+      ],
+      500
+    );
+  }
+};
+
+const getEventChecklistCache = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cacheKey = `event:${id}:checklist`;
+    const cachedData = await redis.get(cacheKey);
+
+    if (cachedData) {
+      const checklist = JSON.parse(cachedData);
+      return sendSuccess(res, "Event checklist retrieved successfully from cache", checklist);
+    }
+
+    sendError(
+      res,
+      "Cache not found",
+      [{ field: "cache", message: "No cached data available for this event checklist" }],
+      404
+    );
+  } catch (error) {
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve event checklist from cache",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the event checklist from cache",
+        },
+      ],
+      500
+    );
+  }
+};
+
+const getEventDocumentCache = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cacheKey = `event:${id}:documents`;
+    const cachedData = await redis.get(cacheKey);
+
+    if (cachedData) {
+      const document = JSON.parse(cachedData);
+      return sendSuccess(res, "Event documents retrieved successfully from cache", document);
+    }
+
+    sendError(
+      res,
+      "Cache not found",
+      [{ field: "cache", message: "No cached data available for this event documents" }],
+      404
+    );
+  } catch (error) {
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve event documents from cache",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the event documents from cache",
+        },
+      ],
+      500
+    );
+  }
+}
+
+const getEventPopularCache = async (req, res) => {
+  try {
+    const cacheKey = `event:popular`;
+    const cachedData = await redis.get(cacheKey);
+
+    if (cachedData) {
+      const popularEvents = JSON.parse(cachedData);
+      return sendSuccess(res, "Popular events retrieved successfully from cache", popularEvents);
+    }
+
+    sendError(
+      res,
+      "Cache not found",
+      [{ field: "cache", message: "No cached data available for popular events" }],
+      404
+    );
+  } catch (error) {
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve popular events from cache",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving popular events from cache",
+        },
+      ],
+      500
+    );
+  }
+}
+
+const getEventTicketsCache = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cacheKey = `event:${id}:tickets`;
+    const cachedData = await redis.get(cacheKey);
+
+    if (cachedData) {
+      const tickets = JSON.parse(cachedData);
+      return sendSuccess(res, "Event tickets retrieved successfully from cache", tickets);
+    }
+
+    sendError(
+      res,
+      "Cache not found",
+      [{ field: "cache", message: "No cached data available for this event tickets" }],
+      404
+    );
+  } catch (error) {
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve event tickets from cache",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the event tickets from cache",
+        },
+      ],
+      500
+    );
+  }
+}
+
+const deleteEventCache = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const cacheKey = `event:${id}`;
+
+    const cachedData = await redis.get(cacheKey);
+
+    if (!cachedData) {
+      return sendError(
+        res,
+        "Cache not found",
+        [{ field: "cache", message: "No cached data available for this event" }],
+        404
+      );
+    }
+
+    await redis.del(cacheKey);
+
+    sendSuccess(res, "Event deleted successfully from cache", null);
+  } catch (error) {
+    console.error(error);
+    sendError(
+      res,
+      "Failed to delete event from cache",
+      [
+        {
+          field: "server",
+          message: "An error occurred while deleting the event from cache",
+        },
+      ],
+      500
+    );
+  }
+};
+
+const getOrganizerByIdCache = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cacheKey = `organizer:${id}`;
+    const cachedData = await redis.get(cacheKey);
+
+    if (cachedData) {
+      const organizer = JSON.parse(cachedData);
+      return sendSuccess(res, "Organizer retrieved successfully from cache", organizer);
+    }
+
+    sendError(
+      res,
+      "Cache not found",
+      [{ field: "cache", message: "No cached data available for this organizer" }],
+      404
+    );
+  } catch (error) {
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve organizer from cache",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the organizer from cache",
+        },
+      ],
+      500
+    );
+  }
+};
+
+const getOrganizerTopEventCache = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cacheKey = `organizer:${id}:top-event`;
+    const cachedData = await redis.get(cacheKey);
+
+    if (cachedData) {
+      const topEvent = JSON.parse(cachedData);
+      return sendSuccess(res, "Organizer's top event retrieved successfully from cache", topEvent);
+    }
+
+    sendError(
+      res,
+      "Cache not found",
+      [{ field: "cache", message: "No cached data available for this organizer's top event" }],
+      404
+    );
+  } catch (error) {
+    console.error(error);
+    sendError(
+      res,
+      "Failed to retrieve organizer's top event from cache",
+      [
+        {
+          field: "server",
+          message: "An error occurred while retrieving the organizer's top event from cache",
+        },
+      ],
+      500
+    );
+  }
+}
+
 module.exports = {
   registerUserCache,
   getUserByIdCache,
   deleteUserCache,
+  createEvent,
+  getEventByIdCache,
+  getAllEventsCache,
+  getEventChecklistCache,
+  getEventDocumentCache,
+  getEventPopularCache,
+  getEventTicketsCache,
+  deleteEventCache,
+  getOrganizerByIdCache,
+  getOrganizerTopEventCache,
 };
