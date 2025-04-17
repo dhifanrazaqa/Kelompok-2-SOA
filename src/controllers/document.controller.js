@@ -1,6 +1,11 @@
 const prisma = require("../config/database");
 const { sendSuccess, sendError } = require("../utils/response");
 
+/**
+ * Mengambil semua dokumen dari database.
+ * @param {Request} req - Objek request dari Express.
+ * @param {Response} res - Objek response dari Express.
+ */
 const getAllDocuments = async (req, res) => {
   try {
     const documents = await prisma.document.findMany();
@@ -11,6 +16,11 @@ const getAllDocuments = async (req, res) => {
   }
 };
 
+/**
+ * Mengambil satu dokumen berdasarkan ID.
+ * @param {Request} req - Objek request dari Express.
+ * @param {Response} res - Objek response dari Express.
+ */
 const getDocumentById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -25,6 +35,11 @@ const getDocumentById = async (req, res) => {
   }
 };
 
+/**
+ * Membuat dokumen baru yang terhubung dengan sebuah event.
+ * @param {Request} req - Objek request dari Express.
+ * @param {Response} res - Objek response dari Express.
+ */
 const createDocument = async (req, res) => {
   try {
     const { eventId, name, url } = req.body;
@@ -52,6 +67,11 @@ const createDocument = async (req, res) => {
   }
 };
 
+/**
+ * Memperbarui data dokumen berdasarkan ID.
+ * @param {Request} req - Objek request dari Express.
+ * @param {Response} res - Objek response dari Express.
+ */
 const updateDocument = async (req, res) => {
   try {
     const { id } = req.params;
@@ -80,6 +100,11 @@ const updateDocument = async (req, res) => {
   }
 };
 
+/**
+ * Menghapus dokumen berdasarkan ID.
+ * @param {Request} req - Objek request dari Express.
+ * @param {Response} res - Objek response dari Express.
+ */
 const deleteDocument = async (req, res) => {
   try {
     const { id } = req.params;

@@ -1,6 +1,11 @@
 const prisma = require("../config/database");
 const { sendSuccess, sendError } = require("../utils/response");
 
+/**
+ * Mengambil semua checklist dari database
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const getAllChecklists = async (req, res) => {
   try {
     const checklists = await prisma.checklist.findMany();
@@ -11,6 +16,11 @@ const getAllChecklists = async (req, res) => {
   }
 };
 
+/**
+ * Mengambil data checklist berdasarkan ID
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const getChecklistById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -26,6 +36,11 @@ const getChecklistById = async (req, res) => {
   }
 };
 
+/**
+ * Membuat checklist baru untuk event tertentu
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const createChecklist = async (req, res) => {
   try {
     const { eventId, title, description, progress } = req.body;
@@ -54,6 +69,11 @@ const createChecklist = async (req, res) => {
   }
 };
 
+/**
+ * Memperbarui data checklist berdasarkan ID
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const updateChecklist = async (req, res) => {
   try {
     const { id } = req.params;
@@ -83,6 +103,11 @@ const updateChecklist = async (req, res) => {
   }
 };
 
+/**
+ * Menghapus checklist berdasarkan ID
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const deleteChecklist = async (req, res) => {
   try {
     const { id } = req.params;
