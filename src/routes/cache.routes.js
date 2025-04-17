@@ -38,7 +38,34 @@ const router = express.Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "John Doe"
+ *               password:
+ *                 type: string
+ *                 example: "password123"
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "john@example.com"
+ *               phone:
+ *                 type: string
+ *                 example: "+1234567890"
+ *               address:
+ *                 type: string
+ *                 example: "123 Main Street"
+ *               role:
+ *                 type: string
+ *                 enum: [PARTICIPANT, ORGANIZER, ADMIN]
+ *                 example: "PARTICIPANT"
+ *             required:
+ *               - name
+ *               - password
+ *               - email
+ *               - address
+ *               - role
  *     responses:
  *       201:
  *         description: User registered and cached
@@ -94,7 +121,63 @@ router.delete("/user/:id", deleteUserCache);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Event'
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Music Festival 2025"
+ *               type:
+ *                 type: string
+ *                 enum: [KONSER, PARTY, SEMINAR, LAINNYA]
+ *                 example: "KONSER"
+ *               target:
+ *                 type: string
+ *                 enum: [PRIVATE, PUBLIC]
+ *                 example: "PUBLIC"
+ *               budgetRange:
+ *                 type: string
+ *                 enum: [FIVE_TO_TEN, TEN_TO_TWENTY, TWENTY_TO_THIRTYFIVE, TENTATIVE]
+ *                 example: "TEN_TO_TWENTY"
+ *               organizerId:
+ *                 type: string
+ *                 example: "org_12345"
+ *               thumbnail:
+ *                 type: string
+ *                 example: "https://example.com/image.jpg"
+ *               description:
+ *                 type: string
+ *                 example: "A grand open-air music festival featuring top artists."
+ *               startDate:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-06-01T18:00:00Z"
+ *               endDate:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-06-02T03:00:00Z"
+ *               picName:
+ *                 type: string
+ *                 example: "Jane Doe"
+ *               picPhone:
+ *                 type: string
+ *                 example: "+628123456789"
+ *               picEmail:
+ *                 type: string
+ *                 format: email
+ *                 example: "jane@example.com"
+ *               status:
+ *                 type: string
+ *                 enum: [CONCEPTING, PRODUCTION, TICKETING, ONGOING]
+ *                 example: "CONCEPTING"
+ *             required:
+ *               - title
+ *               - type
+ *               - target
+ *               - budgetRange
+ *               - organizerId
+ *               - description
+ *               - startDate
+ *               - endDate
  *     responses:
  *       201:
  *         description: Event created and cached

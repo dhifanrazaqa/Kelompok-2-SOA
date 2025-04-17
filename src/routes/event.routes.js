@@ -182,23 +182,75 @@ router.get("/:id", getEventById);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - title
+ *               - type
+ *               - target
+ *               - budgetRange
+ *               - organizerId
+ *               - description
+ *               - startDate
+ *               - endDate
  *             properties:
- *               name:
+ *               title:
  *                 type: string
- *                 description: The name of the event
- *                 example: Annual Conference
+ *                 description: The title of the event
+ *                 example: JavaScript Conference 2025
+ *               type:
+ *                 type: string
+ *                 enum: [KONSER, PARTY, SEMINAR, LAINNYA]
+ *                 description: The type of the event
+ *                 example: SEMINAR
+ *               target:
+ *                 type: string
+ *                 enum: [PRIVATE, PUBLIC]
+ *                 description: The target audience of the event
+ *                 example: PUBLIC
+ *               budgetRange:
+ *                 type: string
+ *                 enum: [FIVE_TO_TEN, TEN_TO_TWENTY, TWENTY_TO_THIRTYFIVE, TENTATIVE]
+ *                 description: Budget range for the event
+ *                 example: TEN_TO_TWENTY
+ *               organizerId:
+ *                 type: string
+ *                 description: ID of the organizer
+ *                 example: 123e4567-e89b-12d3-a456-426614174000
+ *               thumbnail:
+ *                 type: string
+ *                 description: URL of the event thumbnail (optional)
+ *                 example: https://example.com/images/event-thumb.jpg
  *               description:
  *                 type: string
- *                 description: The description of the event
- *                 example: A conference to discuss the latest trends in technology
- *               date:
+ *                 description: Description of the event
+ *                 example: A full-day seminar on modern web development.
+ *               startDate:
  *                 type: string
- *                 description: The date of the event
- *                 example: 2025-10-01
- *               location:
+ *                 format: date-time
+ *                 description: Start date and time of the event (ISO8601)
+ *                 example: 2025-10-01T09:00:00Z
+ *               endDate:
  *                 type: string
- *                 description: The location of the event
- *                 example: New York City, NY
+ *                 format: date-time
+ *                 description: End date and time of the event (ISO8601)
+ *                 example: 2025-10-01T17:00:00Z
+ *               picName:
+ *                 type: string
+ *                 description: Person in charge's name (optional)
+ *                 example: Jane Doe
+ *               picPhone:
+ *                 type: string
+ *                 description: Person in charge's phone number (optional)
+ *                 example: +628123456789
+ *               picEmail:
+ *                 type: string
+ *                 format: email
+ *                 description: Person in charge's email (optional)
+ *                 example: jane.doe@example.com
+ *               status:
+ *                 type: string
+ *                 enum: [CONCEPTING, PRODUCTION, TICKETING, ONGOING]
+ *                 description: Status of the event (optional)
+ *                 example: CONCEPTING
  *     responses:
  *       201:
  *         description: Event created successfully
@@ -227,22 +279,61 @@ router.post("/", authenticate, createEventValidation, validate, createEvent);
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               title:
  *                 type: string
- *                 description: The updated name of the event
- *                 example: Updated Annual Conference
+ *                 description: The updated title of the event
+ *                 example: Updated JavaScript Conference
+ *               type:
+ *                 type: string
+ *                 enum: [KONSER, PARTY, SEMINAR, LAINNYA]
+ *                 description: The updated type of the event
+ *                 example: PARTY
+ *               target:
+ *                 type: string
+ *                 enum: [PRIVATE, PUBLIC]
+ *                 description: The updated target audience
+ *                 example: PRIVATE
+ *               budgetRange:
+ *                 type: string
+ *                 enum: [FIVE_TO_TEN, TEN_TO_TWENTY, TWENTY_TO_THIRTYFIVE, TENTATIVE]
+ *                 description: Updated budget range
+ *                 example: TENTATIVE
+ *               thumbnail:
+ *                 type: string
+ *                 description: URL to the updated thumbnail image
+ *                 example: https://example.com/images/updated-thumb.jpg
  *               description:
  *                 type: string
- *                 description: The updated description of the event
- *                 example: An updated description for the annual technology conference
- *               date:
+ *                 description: Updated event description
+ *                 example: An exciting networking party for developers.
+ *               startDate:
  *                 type: string
- *                 description: The updated date of the event
- *                 example: 2025-11-01
- *               location:
+ *                 format: date-time
+ *                 description: Updated start date (ISO8601 format)
+ *                 example: 2025-12-10T09:00:00Z
+ *               endDate:
  *                 type: string
- *                 description: The updated location of the event
- *                 example: San Francisco, CA
+ *                 format: date-time
+ *                 description: Updated end date (ISO8601 format)
+ *                 example: 2025-12-10T17:00:00Z
+ *               picName:
+ *                 type: string
+ *                 description: Updated PIC name
+ *                 example: John Smith
+ *               picPhone:
+ *                 type: string
+ *                 description: Updated PIC phone number
+ *                 example: +628123456000
+ *               picEmail:
+ *                 type: string
+ *                 format: email
+ *                 description: Updated PIC email address
+ *                 example: john.smith@example.com
+ *               status:
+ *                 type: string
+ *                 enum: [CONCEPTING, PRODUCTION, TICKETING, ONGOING]
+ *                 description: Updated status of the event
+ *                 example: TICKETING
  *     responses:
  *       200:
  *         description: Event updated successfully
@@ -271,6 +362,8 @@ router.put("/:id", authenticate, updateEventValidation, validate, updateEvent);
  *         description: Event deleted successfully
  *       404:
  *         description: Event not found
+ *       401:
+ *         description: Unauthorized
  */
 router.delete("/:id", authenticate, deleteEventValidation, validate, deleteEvent);
 

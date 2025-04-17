@@ -73,14 +73,30 @@ router.get("/:id", authenticate, getChecklistById);
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               eventId:
  *                 type: string
- *                 description: The name of the checklist
- *                 example: Event Setup
+ *                 format: uuid
+ *                 description: The UUID of the event this checklist belongs to
+ *                 example: "550e8400-e29b-41d4-a716-446655440000"
+ *               title:
+ *                 type: string
+ *                 description: The title of the checklist
+ *                 example: "Venue Setup"
  *               description:
  *                 type: string
  *                 description: Description of the checklist
- *                 example: Checklist for setting up the event venue
+ *                 example: "Checklist for setting up the event venue"
+ *               progress:
+ *                 type: integer
+ *                 format: int32
+ *                 minimum: 0
+ *                 maximum: 100
+ *                 description: Progress of the checklist in percentage
+ *                 example: 0
+ *             required:
+ *               - eventId
+ *               - title
+ *               - progress
  *     responses:
  *       201:
  *         description: Checklist created successfully
@@ -104,6 +120,7 @@ router.post("/", authenticate, createChecklistValidation, validate, createCheckl
  *         description: ID of the checklist to update
  *         schema:
  *           type: string
+ *           format: uuid
  *     requestBody:
  *       required: true
  *       content:
@@ -111,14 +128,21 @@ router.post("/", authenticate, createChecklistValidation, validate, createCheckl
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               title:
  *                 type: string
- *                 description: The name of the checklist
- *                 example: Updated Event Setup
+ *                 description: The title of the checklist
+ *                 example: "Updated Venue Setup"
  *               description:
  *                 type: string
  *                 description: Updated description of the checklist
- *                 example: Updated checklist for setting up the event venue
+ *                 example: "Updated checklist for setting up the event venue"
+ *               progress:
+ *                 type: integer
+ *                 format: int32
+ *                 minimum: 0
+ *                 maximum: 100
+ *                 description: Progress of the checklist in percentage
+ *                 example: 50
  *     responses:
  *       200:
  *         description: Checklist updated successfully
@@ -141,9 +165,10 @@ router.put("/:id", authenticate, updateChecklistValidation, validate, updateChec
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the checklist to delete
+ *         description: UUID of the checklist to delete
  *         schema:
  *           type: string
+ *           format: uuid
  *     responses:
  *       200:
  *         description: Checklist deleted successfully

@@ -101,6 +101,18 @@ router.get("/:id", authenticate, getTicketById);
  *                 type: string
  *                 description: The ID of the event for which the ticket is created
  *                 example: "event123"
+ *               quota:
+ *                 type: integer
+ *                 description: The total number of tickets available
+ *                 example: 100
+ *               sold:
+ *                 type: integer
+ *                 description: The number of tickets already sold
+ *                 example: 10
+ *               description:
+ *                 type: string
+ *                 description: A description of the ticket
+ *                 example: "Exclusive access to VIP areas."
  *     responses:
  *       201:
  *         description: Ticket created successfully
@@ -137,6 +149,18 @@ router.post("/", authenticate, createTicketValidation, validate, createTicket);
  *                 type: number
  *                 description: Updated price of the ticket
  *                 example: 175.00
+ *               quota:
+ *                 type: integer
+ *                 description: Updated total number of tickets available
+ *                 example: 120
+ *               sold:
+ *                 type: integer
+ *                 description: Updated number of tickets already sold
+ *                 example: 50
+ *               description:
+ *                 type: string
+ *                 description: Updated description of the ticket
+ *                 example: "Updated access to VIP areas with new benefits."
  *     responses:
  *       200:
  *         description: Ticket updated successfully

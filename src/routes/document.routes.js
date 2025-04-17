@@ -73,14 +73,24 @@ router.get("/:id", authenticate, getDocumentById);
  *           schema:
  *             type: object
  *             properties:
- *               title:
+ *               eventId:
  *                 type: string
- *                 description: The title of the document
- *                 example: Event Proposal
- *               content:
+ *                 format: uuid
+ *                 description: The UUID of the event associated with the document
+ *                 example: "550e8400-e29b-41d4-a716-446655440000"
+ *               name:
  *                 type: string
- *                 description: The content of the document
- *                 example: This document contains the proposal for the upcoming event.
+ *                 description: Name of the document
+ *                 example: "Event Proposal"
+ *               url:
+ *                 type: string
+ *                 format: uri
+ *                 description: URL to access the document
+ *                 example: "https://example.com/documents/proposal.pdf"
+ *             required:
+ *               - eventId
+ *               - name
+ *               - url
  *     responses:
  *       201:
  *         description: Document created successfully
@@ -101,9 +111,10 @@ router.post("/", authenticate, createDocumentValidation, validate, createDocumen
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the document to update
+ *         description: UUID of the document to update
  *         schema:
  *           type: string
+ *           format: uuid
  *     requestBody:
  *       required: true
  *       content:
@@ -111,14 +122,15 @@ router.post("/", authenticate, createDocumentValidation, validate, createDocumen
  *           schema:
  *             type: object
  *             properties:
- *               title:
+ *               name:
  *                 type: string
- *                 description: The updated title of the document
- *                 example: Updated Event Proposal
- *               content:
+ *                 description: The updated name of the document
+ *                 example: "Updated Event Proposal"
+ *               url:
  *                 type: string
- *                 description: The updated content of the document
- *                 example: This document contains the updated proposal for the upcoming event.
+ *                 format: uri
+ *                 description: The updated URL of the document
+ *                 example: "https://example.com/documents/updated-proposal.pdf"
  *     responses:
  *       200:
  *         description: Document updated successfully
@@ -141,9 +153,10 @@ router.put("/:id", authenticate, updateDocumentValidation, validate, updateDocum
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the document to delete
+ *         description: UUID of the document to delete
  *         schema:
  *           type: string
+ *           format: uuid
  *     responses:
  *       200:
  *         description: Document deleted successfully

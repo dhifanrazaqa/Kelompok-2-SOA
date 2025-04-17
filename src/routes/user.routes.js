@@ -162,6 +162,18 @@ router.get("/:id", authenticate, getUserById);
  *                 type: string
  *                 description: Email of the user
  *                 example: "john.doe@example.com"
+ *               phone:
+ *                 type: string
+ *                 description: Phone number of the user
+ *                 example: "+1234567890"
+ *               address:
+ *                 type: string
+ *                 description: Address of the user
+ *                 example: "123 Main St, City, Country"
+ *               role:
+ *                 type: string
+ *                 description: Role of the user
+ *                 example: "ADMIN"
  *     responses:
  *       200:
  *         description: User updated successfully
