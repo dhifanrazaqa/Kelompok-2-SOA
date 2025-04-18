@@ -13,6 +13,7 @@ const {
 } = require("../validations/document.validaton");
 const { validate } = require("../utils/validation");
 const { authenticate } = require("../middlewares/auth.middleware");
+const upload = require("../middlewares/upload.middleware");
 
 const router = express.Router();
 
@@ -99,7 +100,7 @@ router.get("/:id", authenticate, getDocumentById);
  *       401:
  *         description: Unauthorized
  */
-router.post("/", authenticate, createDocumentValidation, validate, createDocument);
+router.post("/", authenticate, upload.single('image'),  createDocumentValidation, validate, createDocument);
 
 /**
  * @swagger

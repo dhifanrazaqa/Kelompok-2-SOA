@@ -11,11 +11,16 @@ const createDocumentValidation = [
         .withMessage('Name is required')
         .isString()
         .withMessage('Name must be a string'),
-    body('url')
-        .notEmpty()
-        .withMessage('URL is required')
-        .isURL()
-        .withMessage('URL must be a valid URL'),
+    body('image')
+        .custom((value, { req }) => {
+            if (!req.file) {
+                throw new Error('Image file is required');
+            }
+            if (req.file.size > 5 * 1024 * 1024) {
+                throw new Error('Image file size must not exceed 5MB');
+            }
+            return true;
+        }),
 ];
 
 const updateDocumentValidation = [

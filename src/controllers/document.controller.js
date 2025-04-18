@@ -1,5 +1,7 @@
 const prisma = require("../config/database");
 const { sendSuccess, sendError } = require("../utils/response");
+const fs = require("fs");
+const cloudinary = require("../config/cloudinary");
 
 const getAllDocuments = async (req, res) => {
   try {
@@ -27,7 +29,19 @@ const getDocumentById = async (req, res) => {
 
 const createDocument = async (req, res) => {
   try {
-    const { eventId, name, url } = req.body;
+    const { eventId, name } = req.body;
+    const result = await cloudinary.uploader
+      .upload(req.file.path, {
+        folder: "eoapp",
+        resource_type: "auto",
+      })
+      .catch(() => {
+        return sendError(res, "Upload failed", [
+          { field: "image", message: "Failed to upload image" },
+        ]);
+      });
+
+    fs.unlinkSync(req.file.path);
 
     const event = await prisma.event.findUnique({
       where: { id: eventId },
@@ -42,7 +56,7 @@ const createDocument = async (req, res) => {
       data: {
         eventId,
         name,
-        url,
+        url: result.secure_url,
       },
     });
     sendSuccess(res, "Document created successfully", document);
@@ -63,7 +77,10 @@ const updateDocument = async (req, res) => {
 
     if (!documentExist)
       return sendError(res, "Document not found", [
-        { field: "id", message: "Document with the provided ID does not exist" },
+        {
+          field: "id",
+          message: "Document with the provided ID does not exist",
+        },
       ]);
 
     const document = await prisma.document.update({
@@ -90,7 +107,10 @@ const deleteDocument = async (req, res) => {
 
     if (!documentExist)
       return sendError(res, "Document not found", [
-        { field: "id", message: "Document with the provided ID does not exist" },
+        {
+          field: "id",
+          message: "Document with the provided ID does not exist",
+        },
       ]);
 
     await prisma.document.delete({ where: { id } });
