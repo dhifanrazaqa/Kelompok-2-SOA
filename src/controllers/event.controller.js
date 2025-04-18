@@ -2,6 +2,11 @@ const prisma = require("../config/database");
 const redis = require("../config/redis");
 const { sendSuccess, sendError } = require("../utils/response");
 
+/**
+ * Mengambil semua event dari database dan menyimpannya ke cache Redis.
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const getAllEvents = async (req, res) => {
   try {
     const cacheKey = "events";
@@ -14,12 +19,15 @@ const getAllEvents = async (req, res) => {
   }
 };
 
+/**
+ * Mengambil detail sebuah event berdasarkan ID-nya dan menyimpannya ke cache Redis.
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const getEventById = async (req, res) => {
   try {
     const { id } = req.params;
-
     const cacheKey = `event:${id}`;
-
     const event = await prisma.event.findUnique({
       where: { id },
       include: {
@@ -74,7 +82,6 @@ const getEventById = async (req, res) => {
     if (!event) return sendError(res, "Event not found", [], 404);
 
     await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
-
     sendSuccess(res, "Event retrieved successfully", event);
   } catch (error) {
     console.error(error);
@@ -82,12 +89,15 @@ const getEventById = async (req, res) => {
   }
 };
 
+/**
+ * Mengambil tiket-tiket dari sebuah event tertentu dan menyimpannya ke cache Redis.
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const getEventTickets = async (req, res) => {
   try {
     const { id } = req.params;
-
     const cacheKey = `event:${id}:tickets`;
-
     const event = await prisma.event.findUnique({
       where: { id },
       include: {
@@ -107,7 +117,6 @@ const getEventTickets = async (req, res) => {
     if (!event) return sendError(res, "Event not found", [], 404);
 
     await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
-
     sendSuccess(res, "Event with tickets retrieved successfully", event);
   } catch (error) {
     console.error(error);
@@ -115,12 +124,15 @@ const getEventTickets = async (req, res) => {
   }
 };
 
+/**
+ * Mengambil checklist dari sebuah event dan menyimpannya ke cache Redis.
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const getEventChecklist = async (req, res) => {
   try {
     const { id } = req.params;
-
     const cacheKey = `event:${id}:checklist`;
-
     const event = await prisma.event.findUnique({
       where: { id },
       include: {
@@ -138,7 +150,6 @@ const getEventChecklist = async (req, res) => {
     if (!event) return sendError(res, "Event not found", [], 404);
 
     await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
-
     sendSuccess(res, "Event with checklist retrieved successfully", event);
   } catch (error) {
     console.error(error);
@@ -146,12 +157,15 @@ const getEventChecklist = async (req, res) => {
   }
 };
 
+/**
+ * Mengambil dokumen dari sebuah event dan menyimpannya ke cache Redis.
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const getEventDocuments = async (req, res) => {
   try {
     const { id } = req.params;
-
     const cacheKey = `event:${id}:documents`;
-
     const event = await prisma.event.findUnique({
       where: { id },
       include: {
@@ -168,7 +182,6 @@ const getEventDocuments = async (req, res) => {
     if (!event) return sendError(res, "Event not found", [], 404);
 
     await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
-
     sendSuccess(res, "Event with documents retrieved successfully", event);
   } catch (error) {
     console.error(error);
@@ -176,6 +189,11 @@ const getEventDocuments = async (req, res) => {
   }
 };
 
+/**
+ * Mengambil peserta dari sebuah event yang status pembayarannya sudah "PAID" dan order-nya "CONFIRMED".
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const getEventParticipants = async (req, res) => {
   try {
     const { id } = req.params;
@@ -203,7 +221,6 @@ const getEventParticipants = async (req, res) => {
     });
 
     if (!event) return sendError(res, "Event not found", [], 404);
-
     sendSuccess(res, "Event with participants retrieved successfully", event);
   } catch (error) {
     console.error(error);
@@ -211,10 +228,14 @@ const getEventParticipants = async (req, res) => {
   }
 };
 
+/**
+ * Mengambil event-event yang paling populer berdasarkan jumlah tiket yang terjual.
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const getMostPopularEvents = async (req, res) => {
   try {
     const cacheKey = "event:popular";
-
     const events = await prisma.event.findMany({
       include: {
         tickets: {
@@ -244,18 +265,18 @@ const getMostPopularEvents = async (req, res) => {
       return sendError(res, "No events found", [], 404);
 
     await redis.set(cacheKey, JSON.stringify(sortedEvents), "EX", 60);
-
-    sendSuccess(
-      res,
-      "Most popular events retrieved successfully",
-      sortedEvents
-    );
+    sendSuccess(res, "Most popular events retrieved successfully", sortedEvents);
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to retrieve most popular events", error, 500);
   }
 };
 
+/**
+ * Mengambil event yang akan datang dalam waktu 7 hari dari sekarang.
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const getUpcomingEvents = async (req, res) => {
   try {
     const upcomingEvents = await prisma.event.findMany({
@@ -312,6 +333,11 @@ const getUpcomingEvents = async (req, res) => {
   }
 };
 
+/**
+ * Membuat event baru setelah memastikan organizer terkait ada.
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const createEvent = async (req, res) => {
   try {
     const {
@@ -366,6 +392,11 @@ const createEvent = async (req, res) => {
   }
 };
 
+/**
+ * Memperbarui event berdasarkan ID.
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const updateEvent = async (req, res) => {
   try {
     const { id } = req.params;
@@ -415,6 +446,11 @@ const updateEvent = async (req, res) => {
   }
 };
 
+/**
+ * Menghapus event berdasarkan ID.
+ * @param {Request} req 
+ * @param {Response} res 
+ */
 const deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;

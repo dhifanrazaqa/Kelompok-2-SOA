@@ -1,6 +1,10 @@
 const prisma = require("../config/database");
 const { sendSuccess, sendError } = require("../utils/response");
 
+/**
+ * Get all venues from the database
+ * @route GET /venues
+ */
 const getAllVenues = async (req, res) => {
   try {
     const venues = await prisma.venue.findMany();
@@ -11,13 +15,19 @@ const getAllVenues = async (req, res) => {
   }
 };
 
+/**
+ * Get a single venue by its ID
+ * @route GET /venues/:id
+ */
 const getVenueById = async (req, res) => {
   try {
     const { id } = req.params;
     const venue = await prisma.venue.findUnique({
       where: { id },
     });
+
     if (!venue) return sendError(res, "Venue not found", [], 404);
+
     sendSuccess(res, "Venue retrieved successfully", venue);
   } catch (error) {
     console.error(error);
@@ -25,32 +35,38 @@ const getVenueById = async (req, res) => {
   }
 };
 
+/**
+ * Get events by venue city
+ * Converts URL-friendly city name to proper lowercase space-separated string
+ * @route GET /venues/events/city/:city
+ */
 const getEventByVenueCity = async (req, res) => {
   try {
     let { city } = req.params;
 
+    // Replace hyphen with space for city name
     city = city.replace('-', " ").toLowerCase();
-
-    console.log(city);
 
     const events = await prisma.event.findMany({
       where: { venue: { city } },
     });
 
-    sendSuccess(res, "Events retrieved successfully", {
-      events,
-    });
+    sendSuccess(res, "Events retrieved successfully", { events });
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to retrieve events", error, 500);
   }
 };
 
+/**
+ * Create a new venue for a specific event
+ * @route POST /venues
+ */
 const createVenue = async (req, res) => {
   try {
-    const { eventId, name, address, city, capacity, latitude, longitude } =
-      req.body;
+    const { eventId, name, address, city, capacity, latitude, longitude } = req.body;
 
+    // Check if the event exists
     const event = await prisma.event.findUnique({
       where: { id: eventId },
     });
@@ -60,6 +76,7 @@ const createVenue = async (req, res) => {
         { field: "id", message: "Event with the provided ID does not exist" },
       ]);
 
+    // Check if venue for this event already exists
     const existingVenue = await prisma.venue.findUnique({
       where: { eventId },
     });
@@ -69,6 +86,7 @@ const createVenue = async (req, res) => {
         { field: "id", message: "User already created a Venue" },
       ]);
 
+    // Create new venue
     const venue = await prisma.venue.create({
       data: {
         eventId,
@@ -80,6 +98,7 @@ const createVenue = async (req, res) => {
         longitude,
       },
     });
+
     sendSuccess(res, "Venue created successfully", venue);
   } catch (error) {
     console.error(error);
@@ -87,11 +106,14 @@ const createVenue = async (req, res) => {
   }
 };
 
+/**
+ * Update a venue by its ID
+ * @route PUT /venues/:id
+ */
 const updateVenue = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, address, city, capacity, latitude, longitude } =
-      req.body;
+    const { name, address, city, capacity, latitude, longitude } = req.body;
 
     const venueExist = await prisma.venue.findUnique({
       where: { id },
@@ -113,6 +135,7 @@ const updateVenue = async (req, res) => {
         longitude,
       },
     });
+
     sendSuccess(res, "Venue updated successfully", venue);
   } catch (error) {
     console.error(error);
@@ -120,6 +143,10 @@ const updateVenue = async (req, res) => {
   }
 };
 
+/**
+ * Delete a venue by its ID
+ * @route DELETE /venues/:id
+ */
 const deleteVenue = async (req, res) => {
   try {
     const { id } = req.params;
@@ -134,6 +161,7 @@ const deleteVenue = async (req, res) => {
       ]);
 
     await prisma.venue.delete({ where: { id } });
+
     sendSuccess(res, "Venue deleted successfully", null);
   } catch (error) {
     console.error(error);

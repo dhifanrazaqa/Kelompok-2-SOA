@@ -1,6 +1,10 @@
 const prisma = require("../config/database");
 const { sendSuccess, sendError } = require("../utils/response");
 
+/**
+ * Retrieve all order events.
+ * @route GET /order-events
+ */
 const getAllOrderEvents = async (req, res) => {
   try {
     const orderEvents = await prisma.orderEvent.findMany();
@@ -11,6 +15,11 @@ const getAllOrderEvents = async (req, res) => {
   }
 };
 
+/**
+ * Retrieve a single order event by its ID.
+ * @route GET /order-events/:id
+ * @param {string} id - The ID of the order event
+ */
 const getOrderEventById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -26,6 +35,17 @@ const getOrderEventById = async (req, res) => {
   }
 };
 
+/**
+ * Create a new order event.
+ * @route POST /order-events
+ * @body {string} userId - ID of the user
+ * @body {string} eventId - ID of the event
+ * @body {string} title - Title of the order
+ * @body {string} description - Description of the order
+ * @body {number} totalPrice - Total price for the order
+ * @body {string} paymentStatus - Status of payment
+ * @body {string} orderStatus - Status of the order
+ */
 const createOrderEvent = async (req, res) => {
   try {
     const { userId, eventId, title, description, totalPrice, paymentStatus, orderStatus } = req.body;
@@ -67,6 +87,16 @@ const createOrderEvent = async (req, res) => {
   }
 };
 
+/**
+ * Update an order event by its ID.
+ * @route PUT /order-events/:id
+ * @param {string} id - The ID of the order event
+ * @body {string} title - Updated title
+ * @body {string} description - Updated description
+ * @body {number} totalPrice - Updated total price
+ * @body {string} paymentStatus - Updated payment status
+ * @body {string} orderStatus - Updated order status
+ */
 const updateOrderEvent = async (req, res) => {
   try {
     const { id } = req.params;
@@ -99,6 +129,11 @@ const updateOrderEvent = async (req, res) => {
   }
 };
 
+/**
+ * Delete an order event by its ID.
+ * @route DELETE /order-events/:id
+ * @param {string} id - The ID of the order event
+ */
 const deleteOrderEvent = async (req, res) => {
   try {
     const { id } = req.params;

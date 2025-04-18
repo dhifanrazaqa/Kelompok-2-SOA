@@ -1,6 +1,10 @@
 const prisma = require("../config/database");
 const { sendSuccess, sendError } = require("../utils/response");
 
+/**
+ * Retrieve all tickets.
+ * @route GET /tickets
+ */
 const getAllTickets = async (req, res) => {
   try {
     const tickets = await prisma.ticket.findMany();
@@ -11,13 +15,20 @@ const getAllTickets = async (req, res) => {
   }
 };
 
+/**
+ * Retrieve a ticket by ID.
+ * @route GET /tickets/:id
+ * @param {string} id - Ticket ID
+ */
 const getTicketById = async (req, res) => {
   try {
     const { id } = req.params;
     const ticket = await prisma.ticket.findUnique({
       where: { id },
     });
+
     if (!ticket) return sendError(res, "Ticket not found", [], 404);
+
     sendSuccess(res, "Ticket retrieved successfully", ticket);
   } catch (error) {
     console.error(error);
@@ -25,6 +36,11 @@ const getTicketById = async (req, res) => {
   }
 };
 
+/**
+ * Retrieve all users who purchased a specific ticket.
+ * @route GET /tickets/:id/buyers
+ * @param {string} id - Ticket ID
+ */
 const getTicketBuyers = async (req, res) => {
   try {
     const { id } = req.params;
@@ -61,6 +77,11 @@ const getTicketBuyers = async (req, res) => {
   }
 };
 
+/**
+ * Create a new ticket for an event.
+ * @route POST /tickets
+ * @body { eventId, name, price, quota, sold, description }
+ */
 const createTicket = async (req, res) => {
   try {
     const { eventId, name, price, quota, sold, description } = req.body;
@@ -87,6 +108,7 @@ const createTicket = async (req, res) => {
         description,
       },
     });
+
     sendSuccess(res, "Ticket created successfully", ticket);
   } catch (error) {
     console.error(error);
@@ -94,6 +116,12 @@ const createTicket = async (req, res) => {
   }
 };
 
+/**
+ * Update an existing ticket by ID.
+ * @route PUT /tickets/:id
+ * @param {string} id - Ticket ID
+ * @body { name, price, quota, sold, description }
+ */
 const updateTicket = async (req, res) => {
   try {
     const { id } = req.params;
@@ -118,6 +146,7 @@ const updateTicket = async (req, res) => {
         description,
       },
     });
+
     sendSuccess(res, "Ticket updated successfully", ticket);
   } catch (error) {
     console.error(error);
@@ -125,6 +154,11 @@ const updateTicket = async (req, res) => {
   }
 };
 
+/**
+ * Delete a ticket by ID.
+ * @route DELETE /tickets/:id
+ * @param {string} id - Ticket ID
+ */
 const deleteTicket = async (req, res) => {
   try {
     const { id } = req.params;

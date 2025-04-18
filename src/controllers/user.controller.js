@@ -3,6 +3,10 @@ const prisma = require("../config/database");
 const redis = require("../config/redis");
 const { paymentStatus, orderStatus } = require("@prisma/client");
 
+/**
+ * Get all users
+ * @route GET /users
+ */
 const getAllUsers = async (req, res) => {
   try {
     const users = await prisma.user.findMany({
@@ -32,10 +36,14 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+/**
+ * Get user by ID
+ * @route GET /users/:id
+ * @param {string} id - User ID
+ */
 const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
-
     const cacheKey = `user:${id}`;
 
     const user = await prisma.user.findUnique({
@@ -75,6 +83,11 @@ const getUserById = async (req, res) => {
   }
 };
 
+/**
+ * Get tickets purchased by user (only confirmed & paid)
+ * @route GET /users/:id/tickets
+ * @param {string} id - User ID
+ */
 const getUserTickets = async (req, res) => {
   try {
     const { id } = req.params;
@@ -133,6 +146,11 @@ const getUserTickets = async (req, res) => {
   }
 };
 
+/**
+ * Get organizer profile associated with user
+ * @route GET /users/:id/organizer
+ * @param {string} id - User ID
+ */
 const getUserOrganizer = async (req, res) => {
   try {
     const { id } = req.params;
@@ -173,6 +191,11 @@ const getUserOrganizer = async (req, res) => {
   }
 };
 
+/**
+ * Get all order tickets (any status) by user
+ * @route GET /users/:id/orders/tickets
+ * @param {string} id - User ID
+ */
 const getUserOrderTickets = async (req, res) => {
   try {
     const { id } = req.params;
@@ -229,6 +252,11 @@ const getUserOrderTickets = async (req, res) => {
   }
 };
 
+/**
+ * Get all order events by user
+ * @route GET /users/:id/orders/events
+ * @param {string} id - User ID
+ */
 const getUserOrderEvents = async (req, res) => {
   try {
     const { id } = req.params;
@@ -284,13 +312,19 @@ const getUserOrderEvents = async (req, res) => {
   }
 };
 
+/**
+ * Update user data
+ * @route PUT /users/:id
+ * @param {string} id - User ID
+ * @body { name, phone, address, role }
+ */
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, phone, address, role } = req.body;
 
     const user = await prisma.user.findUnique({
-      where: { id: req.params.id },
+      where: { id },
     });
 
     if (!user)
@@ -333,12 +367,17 @@ const updateUser = async (req, res) => {
   }
 };
 
+/**
+ * Delete user by ID
+ * @route DELETE /users/:id
+ * @param {string} id - User ID
+ */
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
     const user = await prisma.user.findUnique({
-      where: { id: req.params.id },
+      where: { id },
     });
 
     if (!user)
