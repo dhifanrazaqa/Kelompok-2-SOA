@@ -3,6 +3,11 @@ const { hashPassword } = require("../utils/password");
 const prisma = require("../config/database");
 const redis = require("../config/redis");
 
+/**
+ * Middleware untuk registrasi user dan menyimpan datanya ke Redis cache
+ * @param {Request} req - Express request, berisi data user
+ * @param {Response} res - Express response
+ */
 const registerUserCache = async (req, res) => {
   try {
     const { name, email, password, phone, address, role } = req.body;
@@ -42,20 +47,20 @@ const registerUserCache = async (req, res) => {
     sendSuccess(res, "User created successfully", user);
   } catch (error) {
     console.error(error);
-    sendError(
-      res,
-      "Failed to create user",
-      [
-        {
-          field: "server",
-          message: "An error occurred while creating user",
-        },
-      ],
-      500
-    );
+    sendError(res, "Failed to create user", [
+      {
+        field: "server",
+        message: "An error occurred while creating user",
+      },
+    ], 500);
   }
 };
 
+/**
+ * Middleware untuk mengambil data user dari Redis cache berdasarkan ID
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
 const getUserByIdCache = async (req, res) => {
   try {
     const { id } = req.params;
@@ -67,43 +72,36 @@ const getUserByIdCache = async (req, res) => {
       return sendSuccess(res, "User retrieved successfully from cache", user);
     }
 
-    sendError(
-      res,
-      "Cache not found",
-      [{ field: "cache", message: "No cached data available for this" }],
-      404
-    );
+    sendError(res, "Cache not found", [
+      { field: "cache", message: "No cached data available for this" }
+    ], 404);
   } catch (error) {
     console.error(error);
-    sendError(
-      res,
-      "Failed to retrieve user from cache",
-      [
-        {
-          field: "server",
-          message: "An error occurred while retrieving the user from cache",
-        },
-      ],
-      500
-    );
+    sendError(res, "Failed to retrieve user from cache", [
+      {
+        field: "server",
+        message: "An error occurred while retrieving the user from cache",
+      },
+    ], 500);
   }
 };
 
+/**
+ * Middleware untuk menghapus cache user berdasarkan ID
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
 const deleteUserCache = async (req, res) => {
   try {
     const { id } = req.params;
 
     const cacheKey = `user:${id}`;
-
     const cachedData = await redis.get(cacheKey);
 
     if (!cachedData) {
-      return sendError(
-        res,
-        "Cache not found",
-        [{ field: "cache", message: "No cached data available for this" }],
-        404
-      );
+      return sendError(res, "Cache not found", [
+        { field: "cache", message: "No cached data available for this" }
+      ], 404);
     }
 
     await redis.del(cacheKey);
@@ -111,20 +109,20 @@ const deleteUserCache = async (req, res) => {
     sendSuccess(res, "User deleted successfully from cache", null);
   } catch (error) {
     console.error(error);
-    sendError(
-      res,
-      "Failed to delete user from cache",
-      [
-        {
-          field: "server",
-          message: "An error occurred while deleting the user from cache",
-        },
-      ],
-      500
-    );
+    sendError(res, "Failed to delete user from cache", [
+      {
+        field: "server",
+        message: "An error occurred while deleting the user from cache",
+      },
+    ], 500);
   }
 };
 
+/**
+ * Middleware untuk membuat event dan menyimpan ke Redis cache
+ * @param {Request} req - Express request, berisi data event
+ * @param {Response} res - Express response
+ */
 const createEvent = async (req, res) => {
   try {
     const {
@@ -183,6 +181,11 @@ const createEvent = async (req, res) => {
   }
 };
 
+/**
+ * Middleware untuk mengambil event dari cache berdasarkan ID
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
 const getEventByIdCache = async (req, res) => {
   try {
     const { id } = req.params;
@@ -194,28 +197,25 @@ const getEventByIdCache = async (req, res) => {
       return sendSuccess(res, "Event retrieved successfully from cache", event);
     }
 
-    sendError(
-      res,
-      "Cache not found",
-      [{ field: "cache", message: "No cached data available for this event" }],
-      404
-    );
+    sendError(res, "Cache not found", [
+      { field: "cache", message: "No cached data available for this event" }
+    ], 404);
   } catch (error) {
     console.error(error);
-    sendError(
-      res,
-      "Failed to retrieve event from cache",
-      [
-        {
-          field: "server",
-          message: "An error occurred while retrieving the event from cache",
-        },
-      ],
-      500
-    );
+    sendError(res, "Failed to retrieve event from cache", [
+      {
+        field: "server",
+        message: "An error occurred while retrieving the event from cache",
+      },
+    ], 500);
   }
 };
 
+/**
+ * Middleware untuk mengambil semua event dari cache
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
 const getAllEventsCache = async (req, res) => {
   try {
     const cacheKey = `events`;
@@ -226,28 +226,25 @@ const getAllEventsCache = async (req, res) => {
       return sendSuccess(res, "Events retrieved successfully from cache", events);
     }
 
-    sendError(
-      res,
-      "Cache not found",
-      [{ field: "cache", message: "No cached data available for events" }],
-      404
-    );
+    sendError(res, "Cache not found", [
+      { field: "cache", message: "No cached data available for events" }
+    ], 404);
   } catch (error) {
     console.error(error);
-    sendError(
-      res,
-      "Failed to retrieve events from cache",
-      [
-        {
-          field: "server",
-          message: "An error occurred while retrieving events from cache",
-        },
-      ],
-      500
-    );
+    sendError(res, "Failed to retrieve events from cache", [
+      {
+        field: "server",
+        message: "An error occurred while retrieving events from cache",
+      },
+    ], 500);
   }
 };
 
+/**
+ * Middleware untuk mengambil checklist dari suatu event berdasarkan ID dari cache
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
 const getEventChecklistCache = async (req, res) => {
   try {
     const { id } = req.params;
@@ -259,28 +256,25 @@ const getEventChecklistCache = async (req, res) => {
       return sendSuccess(res, "Event checklist retrieved successfully from cache", checklist);
     }
 
-    sendError(
-      res,
-      "Cache not found",
-      [{ field: "cache", message: "No cached data available for this event checklist" }],
-      404
-    );
+    sendError(res, "Cache not found", [
+      { field: "cache", message: "No cached data available for this event checklist" }
+    ], 404);
   } catch (error) {
     console.error(error);
-    sendError(
-      res,
-      "Failed to retrieve event checklist from cache",
-      [
-        {
-          field: "server",
-          message: "An error occurred while retrieving the event checklist from cache",
-        },
-      ],
-      500
-    );
+    sendError(res, "Failed to retrieve event checklist from cache", [
+      {
+        field: "server",
+        message: "An error occurred while retrieving the event checklist from cache",
+      },
+    ], 500);
   }
 };
 
+/**
+ * Middleware untuk mengambil dokumen event berdasarkan ID dari cache
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
 const getEventDocumentCache = async (req, res) => {
   try {
     const { id } = req.params;
@@ -292,28 +286,25 @@ const getEventDocumentCache = async (req, res) => {
       return sendSuccess(res, "Event documents retrieved successfully from cache", document);
     }
 
-    sendError(
-      res,
-      "Cache not found",
-      [{ field: "cache", message: "No cached data available for this event documents" }],
-      404
-    );
+    sendError(res, "Cache not found", [
+      { field: "cache", message: "No cached data available for this event documents" }
+    ], 404);
   } catch (error) {
     console.error(error);
-    sendError(
-      res,
-      "Failed to retrieve event documents from cache",
-      [
-        {
-          field: "server",
-          message: "An error occurred while retrieving the event documents from cache",
-        },
-      ],
-      500
-    );
+    sendError(res, "Failed to retrieve event documents from cache", [
+      {
+        field: "server",
+        message: "An error occurred while retrieving the event documents from cache",
+      },
+    ], 500);
   }
-}
+};
 
+/**
+ * Middleware untuk mengambil event populer dari cache
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
 const getEventPopularCache = async (req, res) => {
   try {
     const cacheKey = `event:popular`;
@@ -324,28 +315,25 @@ const getEventPopularCache = async (req, res) => {
       return sendSuccess(res, "Popular events retrieved successfully from cache", popularEvents);
     }
 
-    sendError(
-      res,
-      "Cache not found",
-      [{ field: "cache", message: "No cached data available for popular events" }],
-      404
-    );
+    sendError(res, "Cache not found", [
+      { field: "cache", message: "No cached data available for popular events" }
+    ], 404);
   } catch (error) {
     console.error(error);
-    sendError(
-      res,
-      "Failed to retrieve popular events from cache",
-      [
-        {
-          field: "server",
-          message: "An error occurred while retrieving popular events from cache",
-        },
-      ],
-      500
-    );
+    sendError(res, "Failed to retrieve popular events from cache", [
+      {
+        field: "server",
+        message: "An error occurred while retrieving popular events from cache",
+      },
+    ], 500);
   }
-}
+};
 
+/**
+ * Middleware untuk mengambil tiket event berdasarkan ID dari cache
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
 const getEventTicketsCache = async (req, res) => {
   try {
     const { id } = req.params;
@@ -357,64 +345,55 @@ const getEventTicketsCache = async (req, res) => {
       return sendSuccess(res, "Event tickets retrieved successfully from cache", tickets);
     }
 
-    sendError(
-      res,
-      "Cache not found",
-      [{ field: "cache", message: "No cached data available for this event tickets" }],
-      404
-    );
+    sendError(res, "Cache not found", [
+      { field: "cache", message: "No cached data available for this event tickets" }
+    ], 404);
   } catch (error) {
     console.error(error);
-    sendError(
-      res,
-      "Failed to retrieve event tickets from cache",
-      [
-        {
-          field: "server",
-          message: "An error occurred while retrieving the event tickets from cache",
-        },
-      ],
-      500
-    );
-  }
-}
-
-const deleteEventCache = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const cacheKey = `event:${id}`;
-
-    const cachedData = await redis.get(cacheKey);
-
-    if (!cachedData) {
-      return sendError(
-        res,
-        "Cache not found",
-        [{ field: "cache", message: "No cached data available for this event" }],
-        404
-      );
-    }
-
-    await redis.del(cacheKey);
-
-    sendSuccess(res, "Event deleted successfully from cache", null);
-  } catch (error) {
-    console.error(error);
-    sendError(
-      res,
-      "Failed to delete event from cache",
-      [
-        {
-          field: "server",
-          message: "An error occurred while deleting the event from cache",
-        },
-      ],
-      500
-    );
+    sendError(res, "Failed to retrieve event tickets from cache", [
+      {
+        field: "server",
+        message: "An error occurred while retrieving the event tickets from cache",
+      },
+    ], 500);
   }
 };
 
+/**
+ * Middleware untuk menghapus cache event berdasarkan ID
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
+const deleteEventCache = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cacheKey = `event:${id}`;
+    const cachedData = await redis.get(cacheKey);
+
+    if (!cachedData) {
+      return sendError(res, "Cache not found", [
+        { field: "cache", message: "No cached data available for this event" }
+      ], 404);
+    }
+
+    await redis.del(cacheKey);
+    sendSuccess(res, "Event deleted successfully from cache", null);
+  } catch (error) {
+    console.error(error);
+    sendError(res, "Failed to delete event from cache", [
+      {
+        field: "server",
+        message: "An error occurred while deleting the event from cache",
+      },
+    ], 500);
+  }
+};
+
+/**
+ * Middleware untuk mengambil organizer berdasarkan ID dari cache
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
 const getOrganizerByIdCache = async (req, res) => {
   try {
     const { id } = req.params;
@@ -426,28 +405,25 @@ const getOrganizerByIdCache = async (req, res) => {
       return sendSuccess(res, "Organizer retrieved successfully from cache", organizer);
     }
 
-    sendError(
-      res,
-      "Cache not found",
-      [{ field: "cache", message: "No cached data available for this organizer" }],
-      404
-    );
+    sendError(res, "Cache not found", [
+      { field: "cache", message: "No cached data available for this organizer" }
+    ], 404);
   } catch (error) {
     console.error(error);
-    sendError(
-      res,
-      "Failed to retrieve organizer from cache",
-      [
-        {
-          field: "server",
-          message: "An error occurred while retrieving the organizer from cache",
-        },
-      ],
-      500
-    );
+    sendError(res, "Failed to retrieve organizer from cache", [
+      {
+        field: "server",
+        message: "An error occurred while retrieving the organizer from cache",
+      },
+    ], 500);
   }
 };
 
+/**
+ * Middleware untuk mengambil top event dari organizer berdasarkan ID dari cache
+ * @param {Request} req - Express request
+ * @param {Response} res - Express response
+ */
 const getOrganizerTopEventCache = async (req, res) => {
   try {
     const { id } = req.params;
@@ -459,27 +435,19 @@ const getOrganizerTopEventCache = async (req, res) => {
       return sendSuccess(res, "Organizer's top event retrieved successfully from cache", topEvent);
     }
 
-    sendError(
-      res,
-      "Cache not found",
-      [{ field: "cache", message: "No cached data available for this organizer's top event" }],
-      404
-    );
+    sendError(res, "Cache not found", [
+      { field: "cache", message: "No cached data available for this organizer's top event" }
+    ], 404);
   } catch (error) {
     console.error(error);
-    sendError(
-      res,
-      "Failed to retrieve organizer's top event from cache",
-      [
-        {
-          field: "server",
-          message: "An error occurred while retrieving the organizer's top event from cache",
-        },
-      ],
-      500
-    );
+    sendError(res, "Failed to retrieve organizer's top event from cache", [
+      {
+        field: "server",
+        message: "An error occurred while retrieving the organizer's top event from cache",
+      },
+    ], 500);
   }
-}
+};
 
 module.exports = {
   registerUserCache,

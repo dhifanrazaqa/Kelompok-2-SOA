@@ -2,6 +2,10 @@ const prisma = require("../config/database");
 const sendEmail = require("../config/mail");
 const { sendSuccess, sendError } = require("../utils/response");
 
+/**
+ * Retrieve all order tickets.
+ * @route GET /order-tickets
+ */
 const getAllOrderTickets = async (req, res) => {
   try {
     const orderTickets = await prisma.orderTicket.findMany();
@@ -12,6 +16,11 @@ const getAllOrderTickets = async (req, res) => {
   }
 };
 
+/**
+ * Retrieve a single order ticket by its ID.
+ * @route GET /order-tickets/:id
+ * @param {string} id - The ID of the order ticket
+ */
 const getOrderTicketById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -26,6 +35,17 @@ const getOrderTicketById = async (req, res) => {
   }
 };
 
+/**
+ * Create a new order ticket.
+ * @route POST /order-tickets
+ * @body {string} userId - ID of the user placing the order
+ * @body {string} ticketId - ID of the ticket being ordered
+ * @body {string} eventId - ID of the related event
+ * @body {number} quantity - Number of tickets ordered
+ * @body {number} totalPrice - Total price of the order
+ * @body {string} paymentStatus - Status of the payment
+ * @body {string} orderStatus - Status of the order
+ */
 const createOrderTicket = async (req, res) => {
   try {
     const {
@@ -101,6 +121,15 @@ const createOrderTicket = async (req, res) => {
   }
 };
 
+/**
+ * Update an existing order ticket by its ID.
+ * @route PUT /order-tickets/:id
+ * @param {string} id - The ID of the order ticket
+ * @body {number} quantity - Updated ticket quantity
+ * @body {number} totalPrice - Updated total price
+ * @body {string} paymentStatus - Updated payment status
+ * @body {string} orderStatus - Updated order status
+ */
 const updateOrderTicket = async (req, res) => {
   try {
     const { id } = req.params;
@@ -135,6 +164,11 @@ const updateOrderTicket = async (req, res) => {
   }
 };
 
+/**
+ * Delete an order ticket by its ID.
+ * @route DELETE /order-tickets/:id
+ * @param {string} id - The ID of the order ticket
+ */
 const deleteOrderTicket = async (req, res) => {
   try {
     const { id } = req.params;

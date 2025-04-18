@@ -3,6 +3,12 @@ const { sendSuccess, sendError } = require("../utils/response");
 const { hashPassword, verifyPassword } = require("../utils/password");
 const { generateToken } = require("../utils/token");
 
+/**
+ * Middleware untuk menangani proses registrasi pengguna baru
+ * @param {Request} req - Express request, berisi data pengguna dari body (name, email, password, phone, address, role)
+ * @param {Response} res - Express response, digunakan untuk mengirim respons sukses atau error
+ * @returns {void}
+ */
 const register = async (req, res) => {
   try {
     const { name, email, password, phone, address, role } = req.body;
@@ -44,6 +50,12 @@ const register = async (req, res) => {
   }
 };
 
+/**
+ * Middleware untuk menangani proses login pengguna
+ * @param {Request} req - Express request, berisi data login (email dan password)
+ * @param {Response} res - Express response, digunakan untuk mengirim token jika login berhasil atau error jika gagal
+ * @returns {void}
+ */
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -79,6 +91,12 @@ const login = async (req, res) => {
   }
 };
 
+/**
+ * @module AuthController
+ * @description Berisi handler untuk autentikasi seperti register dan login
+ * @exports register
+ * @exports login
+ */
 module.exports = {
   register,
   login,
