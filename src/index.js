@@ -2,6 +2,7 @@ const express = require("express");
 const routes = require("./routes");
 const { sendError } = require("./utils/response");
 const { swaggerUi, specs } = require('../swagger');
+const {rateLimiter, speedLimiter} = require("./middlewares/limiter");
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 /**
  * Menggunakan route utama aplikasi di prefix /api.
  */
-app.use("/api", routes);
+app.use("/api", speedLimiter, rateLimiter, routes);
 
 /**
  * Middleware untuk menangani rute yang tidak ditemukan (404 Not Found).
