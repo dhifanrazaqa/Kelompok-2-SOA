@@ -1,5 +1,17 @@
 const { body, param } = require("express-validator");
 
+/**
+ * Middleware untuk validasi input saat membuat venue baru.
+ *
+ * Validasi:
+ * - eventId: wajib, UUID
+ * - name: wajib, string
+ * - address: wajib, string
+ * - city: wajib, string
+ * - capacity: wajib, integer positif
+ * - latitude: wajib, desimal
+ * - longitude: wajib, desimal
+ */
 const createVenueValidation = [
   body("eventId")
     .notEmpty()
@@ -38,6 +50,15 @@ const createVenueValidation = [
     .withMessage("Longitude must be a decimal number"),
 ];
 
+/**
+ * Middleware untuk validasi input saat mengupdate data venue.
+ *
+ * Validasi:
+ * - id (param): wajib, UUID
+ * - name, address, city: opsional, string
+ * - capacity: opsional, integer positif
+ * - latitude, longitude: opsional, desimal
+ */
 const updateVenueValidation = [
   param("id")
     .notEmpty()
@@ -61,6 +82,12 @@ const updateVenueValidation = [
     .withMessage("Longitude must be a decimal number"),
 ];
 
+/**
+ * Middleware untuk validasi input saat menghapus venue.
+ *
+ * Validasi:
+ * - id (param): wajib, UUID
+ */
 const deleteVenueValidation = [
   param("id")
     .notEmpty()

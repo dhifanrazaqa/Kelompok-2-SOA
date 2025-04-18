@@ -1,5 +1,16 @@
 const { body, param } = require("express-validator");
 
+/**
+ * Middleware untuk validasi input saat membuat event
+ *
+ * Validasi:
+ * - title, type, target, budgetRange, organizerId, description, startDate, endDate: wajib
+ * - thumbnail, picName, picPhone, picEmail, status: opsional
+ * - type hanya boleh: KONSER, PARTY, SEMINAR, LAINNYA
+ * - target hanya boleh: PRIVATE, PUBLIC
+ * - budgetRange hanya boleh: FIVE_TO_TEN, TEN_TO_TWENTY, TWENTY_TO_THIRTYFIVE, TENTATIVE
+ * - status hanya boleh: CONCEPTING, PRODUCTION, TICKETING, ONGOING
+ */
 const createEventValidation = [
   body("title")
     .notEmpty()
@@ -75,6 +86,13 @@ const createEventValidation = [
     ),
 ];
 
+/**
+ * Middleware untuk validasi input saat mengupdate event
+ *
+ * Validasi:
+ * - id (param): wajib, UUID
+ * - semua body field opsional, tapi jika ada, harus sesuai tipe yang ditentukan
+ */
 const updateEventValidation = [
   param("id")
     .notEmpty()
@@ -140,6 +158,12 @@ const updateEventValidation = [
     ),
 ];
 
+/**
+ * Middleware untuk validasi input saat menghapus event
+ *
+ * Validasi:
+ * - id (param): wajib, UUID
+ */
 const deleteEventValidation = [
   param("id")
     .notEmpty()
