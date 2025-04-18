@@ -4,12 +4,6 @@ const prisma = require("../config/database");
 
 /**
  * Middleware to authenticate a user using JWT token from the Authorization header
- * 
- * @function authenticate
- * @param {import("express").Request} req - Express request object
- * @param {import("express").Response} res - Express response object
- * @param {import("express").NextFunction} next - Express next middleware function
- * @returns {void}
  */
 const authenticate = async (req, res, next) => {
   try {
@@ -77,10 +71,7 @@ const authenticate = async (req, res, next) => {
 
 /**
  * Middleware to authorize a user based on their role
- * 
- * @function authorize
  * @param {string[]} allowedRoles - Array of roles allowed to access the route
- * @returns {import("express").RequestHandler}
  */
 const authorize = (allowedRoles) => {
   return (req, res, next) => {
