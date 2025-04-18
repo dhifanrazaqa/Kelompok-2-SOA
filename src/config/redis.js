@@ -1,12 +1,12 @@
 /**
- * Middleware untuk menginisialisasi dan mengonfigurasi koneksi Redis menggunakan ioredis
+ * Middleware to initialize and configure Redis connection using ioredis
  * @module redis
  * @requires ioredis
  *
- * @const {Redis} redis - Instance Redis yang digunakan untuk operasi cache dan penyimpanan data sementara
+ * @event connect - Event triggered when successfully connected to Redis
+ * @event error - Event triggered when a Redis connection error occurs
  * 
- * @event connect - Event yang dipicu saat berhasil terkoneksi ke Redis
- * @event error - Event yang dipicu saat terjadi kesalahan koneksi Redis
+ * @return {Redis} redis - Redis instance used for caching and temporary data storage operations
  */
 const Redis = require("ioredis");
 const logger = require("./logger");

@@ -1,10 +1,8 @@
 /**
- * Middleware untuk menginisialisasi dan mengekspor instance Prisma Client
+ * Module to initialize and export an instance of Prisma Client
  * @module prisma
- * @requires @prisma/client
  * 
- * @const {PrismaClient} PrismaClient - Kelas dari Prisma untuk koneksi database
- * @type {PrismaClient} prisma - Instance Prisma Client yang digunakan untuk query database
+ * @return {PrismaClient} prisma - Prisma Client instance used for database queries
  */
 const { PrismaClient } = require("@prisma/client");
 
