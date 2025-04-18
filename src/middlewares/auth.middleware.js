@@ -2,11 +2,23 @@ const { extractTokenFromHeader, verifyToken } = require("../utils/token");
 const { sendError } = require("../utils/response");
 const prisma = require("../config/database");
 
+/**
+ * Middleware to authenticate a user using JWT token from the Authorization header
+ * 
+ * @function authenticate
+ * @param {import("express").Request} req - Express request object
+ * @param {import("express").Response} res - Express response object
+ * @param {import("express").NextFunction} next - Express next middleware function
+ * @returns {void}
+ */
 const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
+
+    // Extract token from Bearer Authorization header
     const token = extractTokenFromHeader(authHeader);
 
+    // If no token provided
     if (!token) {
       sendError(
         res,
@@ -17,9 +29,10 @@ const authenticate = async (req, res, next) => {
       return;
     }
 
-    // Verify token
+    // Verify and decode token
     const payload = verifyToken(token);
 
+    // If token is invalid or expired
     if (!payload) {
       sendError(
         res,
@@ -30,11 +43,12 @@ const authenticate = async (req, res, next) => {
       return;
     }
 
-    // Get user from database
+    // Retrieve user based on token payload
     const user = await prisma.user.findUnique({
       where: { id: payload.id },
     });
 
+    // If user not found in database
     if (!user) {
       sendError(
         res,
@@ -45,11 +59,13 @@ const authenticate = async (req, res, next) => {
       return;
     }
 
-    // Attach user to request
+    // Attach authenticated user to request object
     req.user = user;
 
+    // Proceed to next middleware
     next();
   } catch (error) {
+    console.error("Auth error:", error);
     sendError(
       res,
       "Authentication error",
