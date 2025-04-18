@@ -13,31 +13,19 @@ const logger = require("./config/logger");
 
 const app = express();
 
+// Use Helmet for security headers
 app.use(helmet());
-
+// Use CORS for cross-origin resource sharing
 app.use(cors());
-
-// Morgan diarahkan ke Winston
+// Logging middleware for HTTP requests
 app.use(loggerMiddleware);
-
-/**
- * Middleware untuk parsing request body sebagai JSON.
- */
+// Middleware for parsing json request bodies
 app.use(express.json());
-
-/**
- * Middleware untuk dokumentasi Swagger di endpoint /api-docs.
- */
+// Middleware for swagger documentation
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
-
-/**
- * Menggunakan route utama aplikasi di prefix /api.
- */
+// Setup rate limiting and speed limiting middleware for API routes
 app.use("/api", speedLimiter, rateLimiter, routes);
-
-/**
- * Middleware untuk menangani rute yang tidak ditemukan (404 Not Found).
- */
+// Middleware for handling 404 errors (not found)
 app.use((req, res) => {
   sendError(
     res,
@@ -46,12 +34,9 @@ app.use((req, res) => {
     404
   );
 });
-
-/**
- * Middleware untuk menangani error tidak terduga di server.
- */
+// Middleware for handling unhandled errors
 app.use((err, req, res, next) => {
-  console.error("Unhandled error:", err);
+  logger.error("Unhandled error:", err);
 
   const errors = [
     {
@@ -67,10 +52,7 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-
-/**
- * Menjalankan server Express pada port yang ditentukan.
- */
+// Start the server and listen on the specified port
 app.listen(PORT, () => {
   logger.info(`Server running on http://localhost:${PORT}`);
   logger.info(`Swagger docs at http://localhost:${PORT}/api-docs`);
