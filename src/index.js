@@ -4,13 +4,21 @@ const { sendError } = require("./utils/response");
 const { swaggerUi, specs } = require("../swagger");
 const helmet = require("helmet");
 const cors = require("cors");
-const { rateLimiter, speedLimiter } = require("./middlewares/limiter");
+const {
+  rateLimiter,
+  speedLimiter,
+} = require("./middlewares/limiter.middleware");
+const loggerMiddleware = require("./middlewares/logger.middleware");
+const logger = require("./config/logger");
 
 const app = express();
 
 app.use(helmet());
 
 app.use(cors());
+
+// Morgan diarahkan ke Winston
+app.use(loggerMiddleware);
 
 /**
  * Middleware untuk parsing request body sebagai JSON.
@@ -64,6 +72,6 @@ const PORT = process.env.PORT || 5000;
  * Menjalankan server Express pada port yang ditentukan.
  */
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Swagger docs at http://localhost:${PORT}/api-docs`);
+  logger.info(`Server running on http://localhost:${PORT}`);
+  logger.info(`Swagger docs at http://localhost:${PORT}/api-docs`);
 });

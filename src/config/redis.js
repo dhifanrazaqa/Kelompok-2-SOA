@@ -9,6 +9,7 @@
  * @event error - Event yang dipicu saat terjadi kesalahan koneksi Redis
  */
 const Redis = require("ioredis");
+const logger = require("./logger");
 
 const redis = new Redis({
   host: process.env.REDIS_HOST,
@@ -17,11 +18,11 @@ const redis = new Redis({
 });
 
 redis.on("connect", () => {
-  console.log("Connected to redis");
+  logger.info("Connected to redis");
 });
 
 redis.on("error", (err) => {
-  console.log("Redis Error", err);
+  logger.error("Redis Error", err);
 });
 
 module.exports = redis;
