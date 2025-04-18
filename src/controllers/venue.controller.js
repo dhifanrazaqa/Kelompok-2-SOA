@@ -8,6 +8,11 @@ const { sendSuccess, sendError } = require("../utils/response");
 const getAllVenues = async (req, res) => {
   try {
     const venues = await prisma.venue.findMany();
+
+    venues.forEach((venue) => {
+      venue.locationImage = `https://maps.googleapis.com/maps/api/staticmap?center=${venue.latitude},${venue.longitude}&zoom=15&size=600x300&markers=color:red%7C${venue.latitude},${venue.longitude}&key=${process.env.MAPS_API_KEY}`;
+    });
+
     sendSuccess(res, "Venues retrieved successfully", venues);
   } catch (error) {
     console.error(error);
@@ -28,6 +33,8 @@ const getVenueById = async (req, res) => {
 
     if (!venue) return sendError(res, "Venue not found", [], 404);
 
+    venue.locationImage = `https://maps.googleapis.com/maps/api/staticmap?center=${venue.latitude},${venue.longitude}&zoom=15&size=600x300&markers=color:red%7C${venue.latitude},${venue.longitude}&key=${process.env.MAPS_API_KEY}`;
+
     sendSuccess(res, "Venue retrieved successfully", venue);
   } catch (error) {
     console.error(error);
@@ -45,7 +52,7 @@ const getEventByVenueCity = async (req, res) => {
     let { city } = req.params;
 
     // Replace hyphen with space for city name
-    city = city.replace('-', " ").toLowerCase();
+    city = city.replace("-", " ").toLowerCase();
 
     const events = await prisma.event.findMany({
       where: { venue: { city } },
@@ -64,7 +71,8 @@ const getEventByVenueCity = async (req, res) => {
  */
 const createVenue = async (req, res) => {
   try {
-    const { eventId, name, address, city, capacity, latitude, longitude } = req.body;
+    const { eventId, name, address, city, capacity, latitude, longitude } =
+      req.body;
 
     // Check if the event exists
     const event = await prisma.event.findUnique({

@@ -81,6 +81,8 @@ const getEventById = async (req, res) => {
 
     if (!event) return sendError(res, "Event not found", [], 404);
 
+    event.venue.locationImage = `https://maps.googleapis.com/maps/api/staticmap?center=${event.venue.latitude},${event.venue.longitude}&zoom=15&size=600x300&markers=color:red%7C${event.venue.latitude},${event.venue.longitude}&key=${process.env.MAPS_API_KEY}`;
+
     await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
     sendSuccess(res, "Event retrieved successfully", event);
   } catch (error) {
