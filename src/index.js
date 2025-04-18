@@ -2,8 +2,14 @@ const express = require("express");
 const routes = require("./routes");
 const { sendError } = require("./utils/response");
 const { swaggerUi, specs } = require('../swagger');
+const helmet = require('helmet');
+const cors = require('cors');
 
 const app = express();
+
+app.use(helmet());
+
+app.use(cors());
 
 /**
  * Middleware untuk parsing request body sebagai JSON.
