@@ -3,9 +3,7 @@ const redis = require("../config/redis");
 const { sendSuccess, sendError } = require("../utils/response");
 
 /**
- * Mengambil semua event dari database dan menyimpannya ke cache Redis.
- * @param {Request} req 
- * @param {Response} res 
+ * Function to retrieve all events and cache the result
  */
 const getAllEvents = async (req, res) => {
   try {
@@ -20,9 +18,8 @@ const getAllEvents = async (req, res) => {
 };
 
 /**
- * Mengambil detail sebuah event berdasarkan ID-nya dan menyimpannya ke cache Redis.
- * @param {Request} req 
- * @param {Response} res 
+ * Function to retrieve an event by ID, including related data such as organizer, checklist, documents, tickets, and venue.
+ * @param {string} req.params.id - ID of the event to retrieve
  */
 const getEventById = async (req, res) => {
   try {
@@ -92,9 +89,8 @@ const getEventById = async (req, res) => {
 };
 
 /**
- * Mengambil tiket-tiket dari sebuah event tertentu dan menyimpannya ke cache Redis.
- * @param {Request} req 
- * @param {Response} res 
+ * Function to retrieve an event along with its tickets by event ID
+ * @param {string} req.params.id - ID of the event to retrieve
  */
 const getEventTickets = async (req, res) => {
   try {
@@ -127,9 +123,8 @@ const getEventTickets = async (req, res) => {
 };
 
 /**
- * Mengambil checklist dari sebuah event dan menyimpannya ke cache Redis.
- * @param {Request} req 
- * @param {Response} res 
+ * Function to retrieve an event with its checklist by ID
+ * @param {string} req.params.id - ID of the event to retrieve
  */
 const getEventChecklist = async (req, res) => {
   try {
@@ -160,9 +155,8 @@ const getEventChecklist = async (req, res) => {
 };
 
 /**
- * Mengambil dokumen dari sebuah event dan menyimpannya ke cache Redis.
- * @param {Request} req 
- * @param {Response} res 
+ * Function to retrieve an event and its associated documents by event ID
+ * @param {string} req.params.id - ID of the event to retrieve
  */
 const getEventDocuments = async (req, res) => {
   try {
@@ -192,9 +186,8 @@ const getEventDocuments = async (req, res) => {
 };
 
 /**
- * Mengambil peserta dari sebuah event yang status pembayarannya sudah "PAID" dan order-nya "CONFIRMED".
- * @param {Request} req 
- * @param {Response} res 
+ * Function to retrieve participants of an event by event ID
+ * @param {string} req.params.id - ID of the event to retrieve participants for
  */
 const getEventParticipants = async (req, res) => {
   try {
@@ -231,9 +224,7 @@ const getEventParticipants = async (req, res) => {
 };
 
 /**
- * Mengambil event-event yang paling populer berdasarkan jumlah tiket yang terjual.
- * @param {Request} req 
- * @param {Response} res 
+ * Function to retrieve the most popular events based on ticket sales
  */
 const getMostPopularEvents = async (req, res) => {
   try {
@@ -275,9 +266,7 @@ const getMostPopularEvents = async (req, res) => {
 };
 
 /**
- * Mengambil event yang akan datang dalam waktu 7 hari dari sekarang.
- * @param {Request} req 
- * @param {Response} res 
+ * Function to retrieve upcoming events within the next 7 days
  */
 const getUpcomingEvents = async (req, res) => {
   try {
@@ -336,9 +325,20 @@ const getUpcomingEvents = async (req, res) => {
 };
 
 /**
- * Membuat event baru setelah memastikan organizer terkait ada.
- * @param {Request} req 
- * @param {Response} res 
+ * Function to handle the creation of a new event
+ * @body {string} title - Title of the event
+ * @body {string} type - Type of the event
+ * @body {string} target - Target audience of the event
+ * @body {string} budgetRange - Budget range for the event
+ * @body {string} organizerId - ID of the organizer
+ * @body {string} thumbnail - Thumbnail image URL for the event
+ * @body {string} description - Description of the event
+ * @body {string} startDate - Start date of the event
+ * @body {string} endDate - End date of the event
+ * @body {string} picName - Name of the person in charge (PIC)
+ * @body {string} picPhone - Phone number of the PIC
+ * @body {string} picEmail - Email address of the PIC
+ * @body {string} status - Status of the event
  */
 const createEvent = async (req, res) => {
   try {
@@ -395,9 +395,19 @@ const createEvent = async (req, res) => {
 };
 
 /**
- * Memperbarui event berdasarkan ID.
- * @param {Request} req 
- * @param {Response} res 
+ * Function to update an existing event by ID
+ * @param {string} req.params.id - ID of the event to update
+ * @body {string} title - Title of the event
+ * @body {string} type - Type of the event
+ * @body {string} target - Target audience of the event
+ * @body {string} budgetRange - Budget range for the event
+ * @body {string} thumbnail - Thumbnail URL for the event
+ * @body {string} description - Description of the event
+ * @body {string} startDate - Start date of the event
+ * @body {string} endDate - End date of the event
+ * @body {string} picName - Name of the person in charge (PIC)
+ * @body {string} picEmail - Email of the person in charge (PIC)
+ * @body {string} status - Status of the event
  */
 const updateEvent = async (req, res) => {
   try {
@@ -449,9 +459,8 @@ const updateEvent = async (req, res) => {
 };
 
 /**
- * Menghapus event berdasarkan ID.
- * @param {Request} req 
- * @param {Response} res 
+ * Function to delete an event by its ID
+ * @param {string} req.params.id - ID of the event to delete
  */
 const deleteEvent = async (req, res) => {
   try {

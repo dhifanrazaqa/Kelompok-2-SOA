@@ -4,9 +4,7 @@ const fs = require("fs");
 const cloudinary = require("../config/cloudinary");
 
 /**
- * Mengambil semua dokumen dari database.
- * @param {Request} req - Objek request dari Express.
- * @param {Response} res - Objek response dari Express.
+ * Function to retrieve all documents from the database
  */
 const getAllDocuments = async (req, res) => {
   try {
@@ -19,9 +17,8 @@ const getAllDocuments = async (req, res) => {
 };
 
 /**
- * Mengambil satu dokumen berdasarkan ID.
- * @param {Request} req - Objek request dari Express.
- * @param {Response} res - Objek response dari Express.
+ * Function to retrieve a document by ID
+ * @param {string} req.params.id - ID of the document to retrieve
  */
 const getDocumentById = async (req, res) => {
   try {
@@ -38,9 +35,10 @@ const getDocumentById = async (req, res) => {
 };
 
 /**
- * Membuat dokumen baru yang terhubung dengan sebuah event.
- * @param {Request} req - Objek request dari Express.
- * @param {Response} res - Objek response dari Express.
+ * Function to handle the creation of a document and upload it to Cloudinary
+ * @body {string} eventId - ID of the event associated with the document
+ * @body {string} name - Name of the document
+ * @body {Object} req.file - Uploaded file object
  */
 const createDocument = async (req, res) => {
   try {
@@ -82,9 +80,10 @@ const createDocument = async (req, res) => {
 };
 
 /**
- * Memperbarui data dokumen berdasarkan ID.
- * @param {Request} req - Objek request dari Express.
- * @param {Response} res - Objek response dari Express.
+ * Function to update a document by its ID
+ * @param {string} req.params.id - ID of the document to update
+ * @body {string} name - New name of the document
+ * @body {string} url - New URL of the document
  */
 const updateDocument = async (req, res) => {
   try {
@@ -118,9 +117,8 @@ const updateDocument = async (req, res) => {
 };
 
 /**
- * Menghapus dokumen berdasarkan ID.
- * @param {Request} req - Objek request dari Express.
- * @param {Response} res - Objek response dari Express.
+ * Function to delete a document by its ID
+ * @param {string} req.params.id - ID of the document to delete
  */
 const deleteDocument = async (req, res) => {
   try {

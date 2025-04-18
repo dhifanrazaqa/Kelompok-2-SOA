@@ -2,9 +2,7 @@ const prisma = require("../config/database");
 const { sendSuccess, sendError } = require("../utils/response");
 
 /**
- * Mengambil semua checklist dari database
- * @param {Request} req 
- * @param {Response} res 
+ * Retrieves all checklists from the database.
  */
 const getAllChecklists = async (req, res) => {
   try {
@@ -17,9 +15,8 @@ const getAllChecklists = async (req, res) => {
 };
 
 /**
- * Mengambil data checklist berdasarkan ID
- * @param {Request} req 
- * @param {Response} res 
+ * Function to retrieve a checklist by ID
+ * @param {string} req.params.id - ID of the checklist to retrieve
  */
 const getChecklistById = async (req, res) => {
   try {
@@ -37,9 +34,11 @@ const getChecklistById = async (req, res) => {
 };
 
 /**
- * Membuat checklist baru untuk event tertentu
- * @param {Request} req 
- * @param {Response} res 
+ * Function to create a new checklist for a specific event
+ * @body {string} eventId - ID of the event to associate with the checklist
+ * @body {string} title - Title of the checklist
+ * @body {string} description - Description of the checklist
+ * @body {number} progress - Progress percentage of the checklist
  */
 const createChecklist = async (req, res) => {
   try {
@@ -70,9 +69,11 @@ const createChecklist = async (req, res) => {
 };
 
 /**
- * Memperbarui data checklist berdasarkan ID
- * @param {Request} req 
- * @param {Response} res 
+ * Function to update an existing checklist by its ID
+ * @param {string} req.params.id - ID of the checklist to update
+ * @body {string} title - New title for the checklist
+ * @body {string} description - New description for the checklist
+ * @body {number} progress - New progress value for the checklist
  */
 const updateChecklist = async (req, res) => {
   try {
@@ -104,9 +105,8 @@ const updateChecklist = async (req, res) => {
 };
 
 /**
- * Menghapus checklist berdasarkan ID
- * @param {Request} req 
- * @param {Response} res 
+ * Function to delete a checklist by its ID
+ * @param {string} req.params.id - ID of the checklist to delete
  */
 const deleteChecklist = async (req, res) => {
   try {

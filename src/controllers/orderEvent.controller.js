@@ -3,7 +3,6 @@ const { sendSuccess, sendError } = require("../utils/response");
 
 /**
  * Retrieve all order events.
- * @route GET /order-events
  */
 const getAllOrderEvents = async (req, res) => {
   try {
@@ -17,8 +16,7 @@ const getAllOrderEvents = async (req, res) => {
 
 /**
  * Retrieve a single order event by its ID.
- * @route GET /order-events/:id
- * @param {string} id - The ID of the order event
+ * @param {string} req.params.id - The ID of the order event
  */
 const getOrderEventById = async (req, res) => {
   try {
@@ -37,7 +35,6 @@ const getOrderEventById = async (req, res) => {
 
 /**
  * Create a new order event.
- * @route POST /order-events
  * @body {string} userId - ID of the user
  * @body {string} eventId - ID of the event
  * @body {string} title - Title of the order
@@ -89,8 +86,7 @@ const createOrderEvent = async (req, res) => {
 
 /**
  * Update an order event by its ID.
- * @route PUT /order-events/:id
- * @param {string} id - The ID of the order event
+ * @param {string} req.params.id - The ID of the order event
  * @body {string} title - Updated title
  * @body {string} description - Updated description
  * @body {number} totalPrice - Updated total price
@@ -131,8 +127,7 @@ const updateOrderEvent = async (req, res) => {
 
 /**
  * Delete an order event by its ID.
- * @route DELETE /order-events/:id
- * @param {string} id - The ID of the order event
+ * @param {string} req.params.id - The ID of the order event
  */
 const deleteOrderEvent = async (req, res) => {
   try {

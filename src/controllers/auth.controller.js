@@ -4,15 +4,19 @@ const { hashPassword, verifyPassword } = require("../utils/password");
 const { generateToken } = require("../utils/token");
 
 /**
- * Middleware untuk menangani proses registrasi pengguna baru
- * @param {Request} req - Express request, berisi data pengguna dari body (name, email, password, phone, address, role)
- * @param {Response} res - Express response, digunakan untuk mengirim respons sukses atau error
- * @returns {void}
+ * Function to handle the registration process for new users
+ * @body {string} name - User's name
+ * @body {string} email - User's email
+ * @body {string} password - User's password
+ * @body {string} phone - User's phone number
+ * @body {string} address - User's address
+ * @body {string} role - User's role
  */
 const register = async (req, res) => {
   try {
     const { name, email, password, phone, address, role } = req.body;
 
+    // Check if the email is already registered
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -27,8 +31,10 @@ const register = async (req, res) => {
       return;
     }
 
+    // Hash password
     const hashedPassword = await hashPassword(password);
 
+    // Create new user in the database
     await prisma.user.create({
       data: { name, email, password: hashedPassword, phone, address, role },
     });
@@ -51,19 +57,20 @@ const register = async (req, res) => {
 };
 
 /**
- * Middleware untuk menangani proses login pengguna
- * @param {Request} req - Express request, berisi data login (email dan password)
- * @param {Response} res - Express response, digunakan untuk mengirim token jika login berhasil atau error jika gagal
- * @returns {void}
+ * Function to handle the login process for users
+ * @body {string} email - User's email
+ * @body {string} password - User's password
  */
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Check if the user exists
     const user = await prisma.user.findUnique({
       where: { email },
     });
 
+    // Validate Password
     if (!user || !(await verifyPassword(password, user.password))) {
       sendError(
         res,
@@ -74,6 +81,7 @@ const login = async (req, res) => {
       return;
     }
 
+    // Generate JWT token
     const token = generateToken({
       id: user.id,
       email: user.email,
@@ -91,12 +99,6 @@ const login = async (req, res) => {
   }
 };
 
-/**
- * @module AuthController
- * @description Berisi handler untuk autentikasi seperti register dan login
- * @exports register
- * @exports login
- */
 module.exports = {
   register,
   login,

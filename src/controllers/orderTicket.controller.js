@@ -5,7 +5,6 @@ const { sendSuccess, sendError } = require("../utils/response");
 
 /**
  * Retrieve all order tickets.
- * @route GET /order-tickets
  */
 const getAllOrderTickets = async (req, res) => {
   try {
@@ -17,6 +16,10 @@ const getAllOrderTickets = async (req, res) => {
   }
 };
 
+/**
+ * Function to generate and return an invoice PDF for a specific order ticket by its ID
+ * @param {string} req.params.id - ID of the order ticket to retrieve
+ */
 const getOrderTicketByIdInvoice = async (req, res) => {
   try {
     const { id } = req.params;
@@ -115,8 +118,7 @@ const getOrderTicketByIdInvoice = async (req, res) => {
 
 /**
  * Retrieve a single order ticket by its ID.
- * @route GET /order-tickets/:id
- * @param {string} id - The ID of the order ticket
+ * @param {string} req.params.id - The ID of the order ticket
  */
 const getOrderTicketById = async (req, res) => {
   try {
@@ -134,7 +136,6 @@ const getOrderTicketById = async (req, res) => {
 
 /**
  * Create a new order ticket.
- * @route POST /order-tickets
  * @body {string} userId - ID of the user placing the order
  * @body {string} ticketId - ID of the ticket being ordered
  * @body {string} eventId - ID of the related event
@@ -220,8 +221,7 @@ const createOrderTicket = async (req, res) => {
 
 /**
  * Update an existing order ticket by its ID.
- * @route PUT /order-tickets/:id
- * @param {string} id - The ID of the order ticket
+ * @param {string} req.params.id - The ID of the order ticket
  * @body {number} quantity - Updated ticket quantity
  * @body {number} totalPrice - Updated total price
  * @body {string} paymentStatus - Updated payment status
@@ -263,8 +263,7 @@ const updateOrderTicket = async (req, res) => {
 
 /**
  * Delete an order ticket by its ID.
- * @route DELETE /order-tickets/:id
- * @param {string} id - The ID of the order ticket
+ * @param {string} req.params.id - The ID of the order ticket
  */
 const deleteOrderTicket = async (req, res) => {
   try {

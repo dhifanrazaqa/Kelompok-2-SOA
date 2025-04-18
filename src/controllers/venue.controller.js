@@ -3,7 +3,6 @@ const { sendSuccess, sendError } = require("../utils/response");
 
 /**
  * Get all venues from the database
- * @route GET /venues
  */
 const getAllVenues = async (req, res) => {
   try {
@@ -21,8 +20,8 @@ const getAllVenues = async (req, res) => {
 };
 
 /**
- * Get a single venue by its ID
- * @route GET /venues/:id
+ * Function to retrieve a venue by ID from the database
+ * @param {string} req.params.id - ID of the venue to retrieve
  */
 const getVenueById = async (req, res) => {
   try {
@@ -45,7 +44,7 @@ const getVenueById = async (req, res) => {
 /**
  * Get events by venue city
  * Converts URL-friendly city name to proper lowercase space-separated string
- * @route GET /venues/events/city/:city
+ * @param {string} req.params.city - City name (Jakarta, Jawa Barat, etc.)
  */
 const getEventByVenueCity = async (req, res) => {
   try {
@@ -66,8 +65,14 @@ const getEventByVenueCity = async (req, res) => {
 };
 
 /**
- * Create a new venue for a specific event
- * @route POST /venues
+ * Create a new venue for an event
+ * @body {string} eventId - ID of the event associated with the venue
+ * @body {string} name - Name of the venue
+ * @body {string} address - Address of the venue
+ * @body {string} city - City where the venue is located
+ * @body {number} capacity - Capacity of the venue
+ * @body {number} latitude - Latitude coordinate of the venue
+ * @body {number} longitude - Longitude coordinate of the venue
  */
 const createVenue = async (req, res) => {
   try {
@@ -115,8 +120,14 @@ const createVenue = async (req, res) => {
 };
 
 /**
- * Update a venue by its ID
- * @route PUT /venues/:id
+ * Function to update an existing venue by its ID
+ * @param {string} req.params.id - ID of the venue to update
+ * @body {string} name - Name of the venue
+ * @body {string} address - Address of the venue
+ * @body {string} city - City where the venue is located
+ * @body {number} capacity - Capacity of the venue
+ * @body {number} latitude - Latitude coordinate of the venue
+ * @body {number} longitude - Longitude coordinate of the venue
  */
 const updateVenue = async (req, res) => {
   try {
@@ -152,8 +163,8 @@ const updateVenue = async (req, res) => {
 };
 
 /**
- * Delete a venue by its ID
- * @route DELETE /venues/:id
+ * Function to delete a venue by its ID
+ * @param {string} req.params.id - ID of the venue to delete
  */
 const deleteVenue = async (req, res) => {
   try {

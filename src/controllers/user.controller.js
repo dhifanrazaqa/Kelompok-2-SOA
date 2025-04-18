@@ -4,8 +4,7 @@ const redis = require("../config/redis");
 const { paymentStatus, orderStatus } = require("@prisma/client");
 
 /**
- * Get all users
- * @route GET /users
+ * Retrieve all users
  */
 const getAllUsers = async (req, res) => {
   try {
@@ -38,8 +37,7 @@ const getAllUsers = async (req, res) => {
 
 /**
  * Get user by ID
- * @route GET /users/:id
- * @param {string} id - User ID
+ * @param {string} req.params.id - User ID
  */
 const getUserById = async (req, res) => {
   try {
@@ -85,8 +83,7 @@ const getUserById = async (req, res) => {
 
 /**
  * Get tickets purchased by user (only confirmed & paid)
- * @route GET /users/:id/tickets
- * @param {string} id - User ID
+ * @param {string} req.params.id - User ID
  */
 const getUserTickets = async (req, res) => {
   try {
@@ -148,8 +145,7 @@ const getUserTickets = async (req, res) => {
 
 /**
  * Get organizer profile associated with user
- * @route GET /users/:id/organizer
- * @param {string} id - User ID
+ * @param {string} req.params.id - User ID
  */
 const getUserOrganizer = async (req, res) => {
   try {
@@ -193,8 +189,7 @@ const getUserOrganizer = async (req, res) => {
 
 /**
  * Get all order tickets (any status) by user
- * @route GET /users/:id/orders/tickets
- * @param {string} id - User ID
+ * @param {string} req.params.id - User ID
  */
 const getUserOrderTickets = async (req, res) => {
   try {
@@ -254,8 +249,7 @@ const getUserOrderTickets = async (req, res) => {
 
 /**
  * Get all order events by user
- * @route GET /users/:id/orders/events
- * @param {string} id - User ID
+ * @param {string} req.params.id - User ID
  */
 const getUserOrderEvents = async (req, res) => {
   try {
@@ -313,10 +307,12 @@ const getUserOrderEvents = async (req, res) => {
 };
 
 /**
- * Update user data
- * @route PUT /users/:id
- * @param {string} id - User ID
- * @body { name, phone, address, role }
+ * Function to update an existing user's details
+ * @param {string} req.params.id - ID of the user to update
+ * @body {string} name - Updated name of the user
+ * @body {string} phone - Updated phone number of the user
+ * @body {string} address - Updated address of the user
+ * @body {string} role - Updated role of the user
  */
 const updateUser = async (req, res) => {
   try {
@@ -369,8 +365,7 @@ const updateUser = async (req, res) => {
 
 /**
  * Delete user by ID
- * @route DELETE /users/:id
- * @param {string} id - User ID
+ * @param {string} req.params.id - User ID
  */
 const deleteUser = async (req, res) => {
   try {

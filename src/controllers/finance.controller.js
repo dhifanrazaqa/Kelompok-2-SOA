@@ -3,7 +3,6 @@ const { sendSuccess, sendError } = require("../utils/response");
 
 /**
  * Retrieve all finance records with their related price range and event type.
- * @route GET /finances
  */
 const getAllFinances = async (req, res) => {
   try {
@@ -20,7 +19,7 @@ const getAllFinances = async (req, res) => {
 /**
  * Retrieve a single finance record by its ID.
  * @route GET /finances/:id
- * @param {string} id - The ID of the finance record
+ * @param {string} req.params.id - The ID of the finance record
  */
 const getFinanceById = async (req, res) => {
   try {
@@ -40,7 +39,6 @@ const getFinanceById = async (req, res) => {
 
 /**
  * Create a new finance record.
- * @route POST /finances
  * @body {Object} data - The finance data
  */
 const createFinance = async (req, res) => {
@@ -56,8 +54,7 @@ const createFinance = async (req, res) => {
 
 /**
  * Update a finance record by its ID.
- * @route PUT /finances/:id
- * @param {string} id - The ID of the finance record
+ * @param {string} req.params.id - The ID of the finance record
  * @body {Object} data - The updated finance data
  */
 const updateFinance = async (req, res) => {
@@ -77,8 +74,7 @@ const updateFinance = async (req, res) => {
 
 /**
  * Delete a finance record by its ID.
- * @route DELETE /finances/:id
- * @param {string} id - The ID of the finance record
+ * @param {string} req.params.id - The ID of the finance record
  */
 const deleteFinance = async (req, res) => {
   try {

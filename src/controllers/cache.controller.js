@@ -4,9 +4,13 @@ const prisma = require("../config/database");
 const redis = require("../config/redis");
 
 /**
- * Middleware untuk registrasi user dan menyimpan datanya ke Redis cache
- * @param {Request} req - Express request, berisi data user
- * @param {Response} res - Express response
+ * Function to add user cache to redis
+ * @body {string} name - User's name
+ * @body {string} email - User's email
+ * @body {string} password - User's password
+ * @body {string} phone - User's phone number
+ * @body {string} address - User's address
+ * @body {string} role - User's role
  */
 const registerUserCache = async (req, res) => {
   try {
@@ -57,9 +61,8 @@ const registerUserCache = async (req, res) => {
 };
 
 /**
- * Middleware untuk mengambil data user dari Redis cache berdasarkan ID
- * @param {Request} req - Express request
- * @param {Response} res - Express response
+ * Function to retrieve a user by ID from the cache
+ * @param {string} req.params.id - ID of the user to retrieve
  */
 const getUserByIdCache = async (req, res) => {
   try {
@@ -87,9 +90,8 @@ const getUserByIdCache = async (req, res) => {
 };
 
 /**
- * Middleware untuk menghapus cache user berdasarkan ID
- * @param {Request} req - Express request
- * @param {Response} res - Express response
+ * Function to delete a user from the cache by ID
+ * @param {string} req.params.id - ID of the user to delete from the cache
  */
 const deleteUserCache = async (req, res) => {
   try {
@@ -119,9 +121,20 @@ const deleteUserCache = async (req, res) => {
 };
 
 /**
- * Middleware untuk membuat event dan menyimpan ke Redis cache
- * @param {Request} req - Express request, berisi data event
- * @param {Response} res - Express response
+ * Function to create a new event and store it in the cache
+ * @body {string} title - Title of the event
+ * @body {string} type - Type of the event
+ * @body {string} target - Target audience of the event
+ * @body {string} budgetRange - Budget range for the event
+ * @body {string} organizerId - ID of the organizer creating the event
+ * @body {string} thumbnail - Thumbnail image URL for the event
+ * @body {string} description - Description of the event
+ * @body {string} startDate - Start date of the event
+ * @body {string} endDate - End date of the event
+ * @body {string} picName - Name of the person in charge (PIC)
+ * @body {string} picPhone - Phone number of the PIC
+ * @body {string} picEmail - Email address of the PIC
+ * @body {string} status - Status of the event
  */
 const createEvent = async (req, res) => {
   try {
@@ -182,9 +195,8 @@ const createEvent = async (req, res) => {
 };
 
 /**
- * Middleware untuk mengambil event dari cache berdasarkan ID
- * @param {Request} req - Express request
- * @param {Response} res - Express response
+ * Function to retrieve an event by ID from the cache
+ * @param {string} req.params.id - ID of the event to retrieve
  */
 const getEventByIdCache = async (req, res) => {
   try {
@@ -212,9 +224,7 @@ const getEventByIdCache = async (req, res) => {
 };
 
 /**
- * Middleware untuk mengambil semua event dari cache
- * @param {Request} req - Express request
- * @param {Response} res - Express response
+ * Function to retrieve all events from the cache
  */
 const getAllEventsCache = async (req, res) => {
   try {
@@ -241,9 +251,8 @@ const getAllEventsCache = async (req, res) => {
 };
 
 /**
- * Middleware untuk mengambil checklist dari suatu event berdasarkan ID dari cache
- * @param {Request} req - Express request
- * @param {Response} res - Express response
+ * Function to retrieve an event checklist by ID from the cache
+ * @param {string} req.params.id - ID of the event to retrieve
  */
 const getEventChecklistCache = async (req, res) => {
   try {
@@ -271,9 +280,8 @@ const getEventChecklistCache = async (req, res) => {
 };
 
 /**
- * Middleware untuk mengambil dokumen event berdasarkan ID dari cache
- * @param {Request} req - Express request
- * @param {Response} res - Express response
+ * Function to retrieve event documents by ID from the cache
+ * @param {string} req.params.id - ID of the event to retrieve documents for
  */
 const getEventDocumentCache = async (req, res) => {
   try {
@@ -301,9 +309,7 @@ const getEventDocumentCache = async (req, res) => {
 };
 
 /**
- * Middleware untuk mengambil event populer dari cache
- * @param {Request} req - Express request
- * @param {Response} res - Express response
+ * Function to retrieve popular events from the cache
  */
 const getEventPopularCache = async (req, res) => {
   try {
@@ -330,9 +336,8 @@ const getEventPopularCache = async (req, res) => {
 };
 
 /**
- * Middleware untuk mengambil tiket event berdasarkan ID dari cache
- * @param {Request} req - Express request
- * @param {Response} res - Express response
+ * Function to retrieve event tickets by ID from the cache
+ * @param {string} req.params.id - ID of the event to retrieve tickets for
  */
 const getEventTicketsCache = async (req, res) => {
   try {
@@ -360,9 +365,8 @@ const getEventTicketsCache = async (req, res) => {
 };
 
 /**
- * Middleware untuk menghapus cache event berdasarkan ID
- * @param {Request} req - Express request
- * @param {Response} res - Express response
+ * Function to delete an event from the cache by its ID
+ * @param {string} req.params.id - ID of the event to delete from the cache
  */
 const deleteEventCache = async (req, res) => {
   try {
@@ -390,9 +394,8 @@ const deleteEventCache = async (req, res) => {
 };
 
 /**
- * Middleware untuk mengambil organizer berdasarkan ID dari cache
- * @param {Request} req - Express request
- * @param {Response} res - Express response
+ * Function to retrieve an organizer by ID from the cache
+ * @param {string} req.params.id - ID of the organizer to retrieve
  */
 const getOrganizerByIdCache = async (req, res) => {
   try {
@@ -420,9 +423,8 @@ const getOrganizerByIdCache = async (req, res) => {
 };
 
 /**
- * Middleware untuk mengambil top event dari organizer berdasarkan ID dari cache
- * @param {Request} req - Express request
- * @param {Response} res - Express response
+ * Function to retrieve the top event of an organizer from the cache
+ * @param {string} req.params.id - ID of the organizer to retrieve the top event for
  */
 const getOrganizerTopEventCache = async (req, res) => {
   try {

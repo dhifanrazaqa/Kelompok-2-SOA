@@ -4,7 +4,6 @@ const { sendSuccess, sendError } = require("../utils/response");
 
 /**
  * Retrieve all organizations.
- * @route GET /organizations
  */
 const getAllOrganizations = async (req, res) => {
   try {
@@ -28,8 +27,7 @@ const getAllOrganizations = async (req, res) => {
 
 /**
  * Retrieve an organization by ID with caching.
- * @route GET /organizations/:id
- * @param {string} id - Organizer ID
+ * @param {string} req.params.id - Organizer ID
  */
 const getOrganizationById = async (req, res) => {
   try {
@@ -69,8 +67,7 @@ const getOrganizationById = async (req, res) => {
 
 /**
  * Retrieve all events related to an organizer.
- * @route GET /organizers/:id/events
- * @param {string} id - Organizer ID
+ * @param {string} req.params.id - Organizer ID
  */
 const getOrganizerEvents = async (req, res) => {
   try {
@@ -97,8 +94,7 @@ const getOrganizerEvents = async (req, res) => {
 
 /**
  * Retrieve organizer dashboard data including total events.
- * @route GET /organizers/:id/dashboard
- * @param {string} id - Organizer ID
+ * @param {string} req.params.id - Organizer ID
  */
 const getOrganizerDashboard = async (req, res) => {
   try {
@@ -149,8 +145,7 @@ const getOrganizerDashboard = async (req, res) => {
 
 /**
  * Retrieve a summary of event statuses by organizer.
- * @route GET /organizers/:id/event-summary
- * @param {string} id - Organizer ID
+ * @param {string} req.params.id - Organizer ID
  */
 const getOrganizerEventSummary = async (req, res) => {
   try {
@@ -201,8 +196,7 @@ const getOrganizerEventSummary = async (req, res) => {
 
 /**
  * Retrieve all venues used by an organizer through their events.
- * @route GET /organizers/:id/venues
- * @param {string} id - Organizer ID
+ * @param {string} req.params.id - Organizer ID
  */
 const getOrganizerVenues = async (req, res) => {
   try {
@@ -262,8 +256,7 @@ const getOrganizerVenues = async (req, res) => {
 /**
  * Retrieve the top event based on ticket sales for an organizer.
  * Cached in Redis for performance.
- * @route GET /organizers/:id/top-event
- * @param {string} id - Organizer ID
+ * @param {string} req.params.id - Organizer ID
  */
 const getOrganizerTopEvent = async (req, res) => {
   try {
@@ -330,8 +323,7 @@ const getOrganizerTopEvent = async (req, res) => {
 
 /**
  * Retrieve all tickets grouped by events for an organizer.
- * @route GET /organizers/:id/tickets
- * @param {string} id - Organizer ID
+ * @param {string} req.params.id - Organizer ID
  */
 const getOrganizerTickets = async (req, res) => {
   try {
@@ -395,7 +387,6 @@ const getOrganizerTickets = async (req, res) => {
 
 /**
  * Create a new organization (only if not already created by user).
- * @route POST /organizations
  */
 const createOrganization = async (req, res) => {
   try {
@@ -441,8 +432,12 @@ const createOrganization = async (req, res) => {
 };
 
 /**
- * Update an existing organization’s details.
- * @route PUT /organizations/:id
+ * Function to update an organization's details
+ * @param {string} req.params.id - ID of the organization to update
+ * @body {string} organizationName - Name of the organization
+ * @body {string} contactName - Name of the contact person
+ * @body {string} contactPhone - Phone number of the contact person
+ * @body {string} contactEmail - Email address of the contact person
  */
 const updateOrganization = async (req, res) => {
   try {
@@ -489,8 +484,8 @@ const updateOrganization = async (req, res) => {
 };
 
 /**
- * Delete an existing organization by ID.
- * @route DELETE /organizations/:id
+ * Function to delete an organization by its ID
+ * @param {string} req.params.id - ID of the organization to delete
  */
 const deleteOrganization = async (req, res) => {
   try {

@@ -3,7 +3,6 @@ const { sendSuccess, sendError } = require("../utils/response");
 
 /**
  * Retrieve all tickets.
- * @route GET /tickets
  */
 const getAllTickets = async (req, res) => {
   try {
@@ -17,8 +16,7 @@ const getAllTickets = async (req, res) => {
 
 /**
  * Retrieve a ticket by ID.
- * @route GET /tickets/:id
- * @param {string} id - Ticket ID
+ * @param {string} req.params.id - Ticket ID
  */
 const getTicketById = async (req, res) => {
   try {
@@ -38,8 +36,7 @@ const getTicketById = async (req, res) => {
 
 /**
  * Retrieve all users who purchased a specific ticket.
- * @route GET /tickets/:id/buyers
- * @param {string} id - Ticket ID
+ * @param {string} req.params.id - Ticket ID
  */
 const getTicketBuyers = async (req, res) => {
   try {
@@ -78,9 +75,13 @@ const getTicketBuyers = async (req, res) => {
 };
 
 /**
- * Create a new ticket for an event.
- * @route POST /tickets
- * @body { eventId, name, price, quota, sold, description }
+ * Function to create a new ticket for an event
+ * @body {string} eventId - ID of the event the ticket is associated with
+ * @body {string} name - Name of the ticket
+ * @body {number} price - Price of the ticket
+ * @body {number} quota - Total quota available for the ticket
+ * @body {number} sold - Number of tickets sold
+ * @body {string} description - Description of the ticket
  */
 const createTicket = async (req, res) => {
   try {
@@ -117,10 +118,13 @@ const createTicket = async (req, res) => {
 };
 
 /**
- * Update an existing ticket by ID.
- * @route PUT /tickets/:id
- * @param {string} id - Ticket ID
- * @body { name, price, quota, sold, description }
+ * Function to update a ticket by its ID
+ * @param {string} req.params.id - ID of the ticket to update
+ * @body {string} name - Name of the ticket
+ * @body {number} price - Price of the ticket
+ * @body {number} quota - Total quota of the ticket
+ * @body {number} sold - Number of tickets sold
+ * @body {string} description - Description of the ticket
  */
 const updateTicket = async (req, res) => {
   try {
@@ -156,8 +160,7 @@ const updateTicket = async (req, res) => {
 
 /**
  * Delete a ticket by ID.
- * @route DELETE /tickets/:id
- * @param {string} id - Ticket ID
+ * @param {string} req.params.id - Ticket ID
  */
 const deleteTicket = async (req, res) => {
   try {
