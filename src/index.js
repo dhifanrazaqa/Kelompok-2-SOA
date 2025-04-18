@@ -1,9 +1,10 @@
 const express = require("express");
 const routes = require("./routes");
 const { sendError } = require("./utils/response");
-const { swaggerUi, specs } = require('../swagger');
-const helmet = require('helmet');
-const cors = require('cors');
+const { swaggerUi, specs } = require("../swagger");
+const helmet = require("helmet");
+const cors = require("cors");
+const { rateLimiter, speedLimiter } = require("./middlewares/limiter");
 
 const app = express();
 
@@ -19,12 +20,12 @@ app.use(express.json());
 /**
  * Middleware untuk dokumentasi Swagger di endpoint /api-docs.
  */
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 /**
  * Menggunakan route utama aplikasi di prefix /api.
  */
-app.use("/api", routes);
+app.use("/api", speedLimiter, rateLimiter, routes);
 
 /**
  * Middleware untuk menangani rute yang tidak ditemukan (404 Not Found).
