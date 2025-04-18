@@ -1,4 +1,5 @@
 const prisma = require("../config/database");
+const sendEmail = require("../config/mail");
 const { sendSuccess, sendError } = require("../utils/response");
 
 const getAllOrderTickets = async (req, res) => {
@@ -17,8 +18,7 @@ const getOrderTicketById = async (req, res) => {
     const orderTicket = await prisma.orderTicket.findUnique({
       where: { id },
     });
-    if (!orderTicket)
-      return sendError(res, "Order Ticket not found", [], 404);
+    if (!orderTicket) return sendError(res, "Order Ticket not found", [], 404);
     sendSuccess(res, "Order Ticket retrieved successfully", orderTicket);
   } catch (error) {
     console.error(error);
@@ -28,7 +28,15 @@ const getOrderTicketById = async (req, res) => {
 
 const createOrderTicket = async (req, res) => {
   try {
-    const { userId, ticketId, eventId, quantity, totalPrice, paymentStatus, orderStatus } = req.body;
+    const {
+      userId,
+      ticketId,
+      eventId,
+      quantity,
+      totalPrice,
+      paymentStatus,
+      orderStatus,
+    } = req.body;
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -36,7 +44,10 @@ const createOrderTicket = async (req, res) => {
 
     if (!user)
       return sendError(res, "User not found", [
-        { field: "userId", message: "User with the provided ID does not exist" },
+        {
+          field: "userId",
+          message: "User with the provided ID does not exist",
+        },
       ]);
 
     const event = await prisma.event.findUnique({
@@ -45,7 +56,10 @@ const createOrderTicket = async (req, res) => {
 
     if (!event)
       return sendError(res, "Event not found", [
-        { field: "eventId", message: "Event with the provided ID does not exist" },
+        {
+          field: "eventId",
+          message: "Event with the provided ID does not exist",
+        },
       ]);
 
     const ticket = await prisma.ticket.findUnique({
@@ -54,7 +68,10 @@ const createOrderTicket = async (req, res) => {
 
     if (!ticket)
       return sendError(res, "Ticket not found", [
-        { field: "ticketId", message: "Ticket with the provided ID does not exist" },
+        {
+          field: "ticketId",
+          message: "Ticket with the provided ID does not exist",
+        },
       ]);
 
     const orderTicket = await prisma.orderTicket.create({
@@ -68,6 +85,14 @@ const createOrderTicket = async (req, res) => {
         orderStatus,
       },
     });
+
+    const result = await sendEmail(
+      "dhifanofficial@gmail.com",
+      "Ticket Order Confirmation",
+      "Thank you for your order. Please complete the payment as soon as possible to confirm your ticket."
+    );
+
+    console.log(result);
 
     sendSuccess(res, "Order Ticket created successfully", orderTicket);
   } catch (error) {
@@ -87,7 +112,10 @@ const updateOrderTicket = async (req, res) => {
 
     if (!orderTicketExist)
       return sendError(res, "Order Ticket not found", [
-        { field: "id", message: "Order Ticket with the provided ID does not exist" },
+        {
+          field: "id",
+          message: "Order Ticket with the provided ID does not exist",
+        },
       ]);
 
     const orderTicket = await prisma.orderTicket.update({
@@ -117,7 +145,10 @@ const deleteOrderTicket = async (req, res) => {
 
     if (!orderTicketExist)
       return sendError(res, "Order Ticket not found", [
-        { field: "id", message: "Order Ticket with the provided ID does not exist" },
+        {
+          field: "id",
+          message: "Order Ticket with the provided ID does not exist",
+        },
       ]);
 
     await prisma.orderTicket.delete({ where: { id } });
