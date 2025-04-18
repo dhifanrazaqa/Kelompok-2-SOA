@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const logger = require("../config/logger");
 
 /**
  * Generate a JWT token
@@ -7,7 +8,7 @@ const jwt = require("jsonwebtoken");
  */
 const generateToken = (payload) => {
   return jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: "3d", // Token expires in 3 days
+    expiresIn: "30m", // Token expires in 3 minute
   });
 };
 
@@ -21,7 +22,7 @@ const verifyToken = (token) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     return decoded;
   } catch (error) {
-    console.error("Token verification failed:", error.message); // Log for debugging
+    logger.error("Token verification failed:", error.message); // Log for debugging
     return null;
   }
 };
