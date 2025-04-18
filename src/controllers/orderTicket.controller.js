@@ -1,5 +1,6 @@
 const prisma = require("../config/database");
 const sendEmail = require("../config/mail");
+const PDFDocument = require("pdfkit");
 const { sendSuccess, sendError } = require("../utils/response");
 
 /**
@@ -13,6 +14,102 @@ const getAllOrderTickets = async (req, res) => {
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to retrieve Order Tickets", error, 500);
+  }
+};
+
+const getOrderTicketByIdInvoice = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const orderTicket = await prisma.orderTicket.findUnique({
+      where: { id },
+      include: {
+        user: true,
+        event: true,
+        ticket: true,
+      },
+    });
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
+
+    const doc = new PDFDocument({ size: "A4", margin: 50 });
+    doc.pipe(res);
+
+    // === Header ===
+    doc.fillColor("#333").fontSize(26).text("INVOICE", { align: "right" });
+
+    doc.moveDown();
+
+    doc
+      .fontSize(12)
+      .text(`Date: ${new Date().toLocaleDateString()}`, { align: "right" })
+      .text(`Invoice #: INV-${orderTicket.id}`, { align: "right" })
+      .moveDown(2);
+
+    // === Company Info ===
+    doc
+      .fillColor("#000")
+      .fontSize(16)
+      .text("Event Organizer App.", { align: "left" })
+      .fontSize(10)
+      .text("UPN Veteran Jakarta", { align: "left" })
+      .text("Jakarta, Indonesia", { align: "left" })
+      .text("Phone: +62 812 3456 7890", { align: "left" })
+      .moveDown(2);
+
+    // === Bill To ===
+    doc
+      .fillColor("#000")
+      .fontSize(14)
+      .text("Bill To:", { underline: true })
+      .fontSize(12)
+      .text(orderTicket.user.name)
+      .text(orderTicket.user.phone)
+      .text(orderTicket.user.address)
+      .moveDown(2);
+
+    // === Items Table ===
+    const tableTop = 320;
+
+    doc
+      .fontSize(12)
+      .text("Description", 50, tableTop)
+      .text("Qty", 300, tableTop)
+      .text("Price", 350, tableTop)
+      .text("Total", 450, tableTop);
+
+    doc
+      .moveTo(50, tableTop + 15)
+      .lineTo(550, tableTop + 15)
+      .stroke();
+
+    doc
+      .text(orderTicket.ticket.name, 50, tableTop + 30)
+      .text(orderTicket.quantity, 300, tableTop + 30)
+      .text(`$${orderTicket.ticket.price.toFixed(2)}`, 350, tableTop + 30)
+      .text(`$${orderTicket.totalPrice.toFixed(2)}`, 450, tableTop + 30);
+
+    // === Total Section ===
+    doc
+      .fontSize(14)
+      .text("Total", 400, tableTop + 100)
+      .text(`$${orderTicket.totalPrice.toFixed(2)}`, 400, tableTop + 100, {
+        align: "right",
+      });
+
+    // === Footer ===
+    doc
+      .fontSize(10)
+      .fillColor("#555")
+      .text("Thank you for your order!", 50, 750, {
+        align: "center",
+        width: 500,
+      });
+
+    doc.end();
+  } catch (error) {
+    console.error("Failed to generate invoice PDF:", error);
+    sendError(res, "Failed to generate PDF invoice", error, 500);
   }
 };
 
@@ -195,6 +292,7 @@ const deleteOrderTicket = async (req, res) => {
 
 module.exports = {
   getAllOrderTickets,
+  getOrderTicketByIdInvoice,
   getOrderTicketById,
   createOrderTicket,
   updateOrderTicket,

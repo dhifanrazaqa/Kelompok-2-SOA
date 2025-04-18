@@ -1,6 +1,7 @@
 const express = require("express");
 const {
   getAllOrderTickets,
+  getOrderTicketByIdInvoice,
   getOrderTicketById,
   createOrderTicket,
   updateOrderTicket,
@@ -34,6 +35,8 @@ const router = express.Router();
  *         description: A list of all order tickets
  */
 router.get("/", authenticate, getAllOrderTickets);
+
+router.get("/:id/invoice", authenticate, getOrderTicketByIdInvoice);
 
 /**
  * @swagger
