@@ -1,16 +1,5 @@
 const { body, param } = require("express-validator");
 
-/**
- * Middleware untuk validasi input saat membuat order event
- *
- * Validasi:
- * - userId, eventId, title, totalPrice, paymentStatus, orderStatus: wajib
- * - description: opsional
- * - userId & eventId harus UUID
- * - totalPrice harus decimal
- * - paymentStatus hanya boleh: PENDING, COMPLETED, FAILED
- * - orderStatus hanya boleh: PENDING, CONFIRMED, CANCELLED
- */
 const createOrderEventValidation = [
   body("userId")
     .notEmpty()
@@ -48,16 +37,6 @@ const createOrderEventValidation = [
     .withMessage("Order status must be one of PENDING, CONFIRMED, or CANCELLED"),
 ];
 
-/**
- * Middleware untuk validasi input saat mengupdate order event
- *
- * Validasi:
- * - id (param): wajib, UUID
- * - semua body field opsional, tapi jika ada harus valid
- * - totalPrice harus decimal
- * - paymentStatus hanya boleh: PENDING, COMPLETED, FAILED
- * - orderStatus hanya boleh: PENDING, CONFIRMED, CANCELLED
- */
 const updateOrderEventValidation = [
   param("id")
     .notEmpty()

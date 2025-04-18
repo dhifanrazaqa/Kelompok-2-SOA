@@ -1,16 +1,5 @@
 const { body, param } = require('express-validator');
 
-/**
- * Middleware untuk validasi input saat membuat order tiket
- *
- * Validasi:
- * - userId, ticketId, eventId, quantity, totalPrice, paymentStatus, orderStatus: wajib
- * - userId, ticketId, eventId: harus UUID
- * - quantity: integer minimal 1
- * - totalPrice: decimal
- * - paymentStatus hanya boleh: PENDING, PAID, FAILED, REFUNDED
- * - orderStatus hanya boleh: NEW, CONFIRMED, CANCELLED
- */
 const createOrderTicketValidation = [
     body('userId')
         .notEmpty().withMessage('User ID is required')
@@ -37,16 +26,6 @@ const createOrderTicketValidation = [
         .withMessage('Type must be one of: NEW, CONFIRMED, CANCELLED'),
 ];
 
-/**
- * Middleware untuk validasi input saat mengupdate order tiket
- *
- * Validasi:
- * - id (param): wajib, UUID
- * - quantity: opsional, integer minimal 1
- * - totalPrice: opsional, decimal
- * - paymentStatus hanya boleh: PENDING, PAID, FAILED, REFUNDED
- * - orderStatus hanya boleh: NEW, CONFIRMED, CANCELLED
- */
 const updateOrderTicketValidation = [
     param('id')
         .notEmpty().withMessage('Order ticket ID is required')
@@ -67,12 +46,6 @@ const updateOrderTicketValidation = [
         .withMessage('Type must be one of: NEW, CONFIRMED, CANCELLED'),
 ];
 
-/**
- * Middleware untuk validasi input saat menghapus order tiket
- *
- * Validasi:
- * - id (param): wajib, UUID
- */
 const deleteOrderTicketValidation = [
     param('id')
         .notEmpty().withMessage('Order ticket ID is required')

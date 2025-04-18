@@ -1,17 +1,5 @@
 const { body } = require("express-validator");
 
-/**
- * Middleware untuk validasi input saat registrasi pengguna baru.
- * Memastikan bahwa semua field yang dibutuhkan valid dan sesuai format.
- *
- * Validasi yang dilakukan:
- * - name: tidak kosong, string, minimal 3 karakter
- * - password: tidak kosong, minimal 6 karakter, mengandung angka
- * - email: tidak kosong, format email valid
- * - phone: opsional, format nomor telepon valid
- * - address: tidak kosong, string
- * - role: tidak kosong, salah satu dari PARTICIPANT, ORGANIZER, ADMIN
- */
 const registerValidation = [
   body("name")
     .notEmpty()
@@ -58,14 +46,6 @@ const registerValidation = [
     .withMessage("Role must be either PARTICIPANT, ORGANIZER, or ADMIN"),
 ];
 
-/**
- * Middleware untuk validasi input saat login pengguna.
- * Memastikan bahwa email dan password diisi dan valid.
- *
- * Validasi yang dilakukan:
- * - email: tidak kosong, format email valid
- * - password: tidak kosong
- */
 const loginValidation = [
   body("email")
     .notEmpty()

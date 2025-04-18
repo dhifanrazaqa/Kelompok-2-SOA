@@ -1,14 +1,5 @@
 const { body, param } = require('express-validator');
 
-/**
- * Middleware untuk validasi input saat membuat checklist
- *
- * Validasi:
- * - `eventId`: wajib diisi, harus berupa UUID
- * - `title`: wajib diisi, harus berupa string
- * - `description`: opsional, jika diisi harus berupa string
- * - `progress`: wajib diisi, harus berupa integer antara 0 sampai 100
- */
 const createChecklistValidation = [
     body('eventId')
         .notEmpty()
@@ -31,15 +22,6 @@ const createChecklistValidation = [
         .withMessage('Progress must be an integer between 0 and 100'),
 ];
 
-/**
- * Middleware untuk validasi input saat mengubah checklist
- *
- * Validasi:
- * - `id`: wajib diisi, harus berupa UUID (diambil dari URL param)
- * - `title`: opsional, jika diisi harus berupa string
- * - `description`: opsional, jika diisi harus berupa string
- * - `progress`: opsional, jika diisi harus berupa integer antara 0 sampai 100
- */
 const updateChecklistValidation = [
     param('id')
         .notEmpty()
@@ -60,12 +42,6 @@ const updateChecklistValidation = [
         .withMessage('Progress must be an integer between 0 and 100'),
 ];
 
-/**
- * Middleware untuk validasi input saat menghapus checklist
- *
- * Validasi:
- * - `id`: wajib diisi, harus berupa UUID (diambil dari URL param)
- */
 const deleteChecklistValidation = [
     param('id')
         .notEmpty()

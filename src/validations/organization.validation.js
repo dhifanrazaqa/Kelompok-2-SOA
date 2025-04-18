@@ -1,14 +1,5 @@
 const { body, param } = require("express-validator");
 
-/**
- * Middleware untuk validasi input saat membuat organizer
- *
- * Validasi:
- * - userId: wajib, UUID
- * - organizationName, contactName: wajib, string
- * - contactPhone: wajib, string format nomor telepon
- * - contactEmail: wajib, format email valid
- */
 const createOrganizerValidation = [
   body("userId")
     .notEmpty()
@@ -46,15 +37,6 @@ const createOrganizerValidation = [
     .normalizeEmail(),
 ];
 
-/**
- * Middleware untuk validasi input saat mengupdate organizer
- *
- * Validasi:
- * - id (param): wajib, UUID
- * - organizationName, contactName, contactPhone, contactEmail: opsional
- *   - contactPhone: harus dalam format nomor telepon
- *   - contactEmail: harus email valid
- */
 const updateOrganizerValidation = [
   param("id")
     .notEmpty()
@@ -88,12 +70,6 @@ const updateOrganizerValidation = [
     .normalizeEmail(),
 ];
 
-/**
- * Middleware untuk validasi input saat menghapus organizer
- *
- * Validasi:
- * - id (param): wajib, UUID
- */
 const deleteOrganizerValidation = [
   param("id")
     .notEmpty()
