@@ -1,7 +1,7 @@
 const express = require("express");
 const routes = require("./routes");
 const { sendError } = require("./utils/response");
-const { swaggerUi, specs } = require("../swagger");
+const { swaggerUi, specs } = require("./config/swagger");
 const helmet = require("helmet");
 const cors = require("cors");
 const {
