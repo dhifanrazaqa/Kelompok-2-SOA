@@ -12,7 +12,7 @@ const {
   deleteChecklistValidation,
 } = require("../validations/checklist.validation");
 const { validate } = require("../utils/validation");
-const { authenticate } = require("../middlewares/auth.middleware");
+const { authenticate, authorize } = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 
@@ -35,7 +35,7 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  */
-router.get("/", authenticate, getAllChecklists);
+router.get("/", authenticate, authorize(['ADMIN', 'ORGANIZER']), getAllChecklists);
 
 /**
  * @swagger

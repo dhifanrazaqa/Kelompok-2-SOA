@@ -75,6 +75,44 @@ const authenticate = async (req, res, next) => {
   }
 };
 
+/**
+ * Middleware to authorize a user based on their role
+ * 
+ * @function authorize
+ * @param {string[]} allowedRoles - Array of roles allowed to access the route
+ * @returns {import("express").RequestHandler}
+ */
+const authorize = (allowedRoles) => {
+  return (req, res, next) => {
+    try {
+      const user = req.user;
+
+      // Check if user exists and has a valid role
+      if (!user || !allowedRoles.includes(user.role)) {
+        sendError(
+          res,
+          "Authorization failed",
+          [{ field: "role", message: "Access denied" }],
+          403
+        );
+        return;
+      }
+
+      // Proceed to next middleware
+      next();
+    } catch (error) {
+      console.error("Authorization error:", error);
+      sendError(
+        res,
+        "Authorization error",
+        [{ field: "auth", message: "An error occurred during authorization" }],
+        500
+      );
+    }
+  };
+};
+
 module.exports = {
   authenticate,
+  authorize,
 };
