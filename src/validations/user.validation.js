@@ -1,5 +1,15 @@
 const { body, param } = require("express-validator");
 
+/**
+ * Middleware untuk validasi input saat mengupdate data pengguna
+ *
+ * Validasi:
+ * - id (param): wajib, UUID
+ * - name: opsional, string minimal 3 karakter
+ * - phone: opsional, string dengan format nomor telepon
+ * - address: opsional, string
+ * - role: opsional, harus salah satu dari PARTICIPANT, ORGANIZER, ADMIN
+ */
 const updateUserValidation = [
     param("id")
         .notEmpty()
@@ -34,6 +44,12 @@ const updateUserValidation = [
         .withMessage("Role must be either PARTICIPANT, ORGANIZER, or ADMIN"),
 ];
 
+/**
+ * Middleware untuk validasi input saat menghapus data pengguna
+ *
+ * Validasi:
+ * - id (param): wajib, UUID
+ */
 const deleteUserValidation = [
     param("id")
         .notEmpty()

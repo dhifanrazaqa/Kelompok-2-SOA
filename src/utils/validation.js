@@ -2,10 +2,13 @@ const { validationResult } = require("express-validator");
 const { sendError } = require("./response");
 
 /**
- * Middleware untuk memvalidasi data request
- * @param {Request} req - Express request
- * @param {Response} res - Express response
- * @param {NextFunction} next - Express next function
+ * Middleware untuk memvalidasi data request.
+ * Memeriksa apakah terdapat error validasi yang dihasilkan oleh express-validator,
+ * dan jika ada, mengembalikan respons error dengan status 400.
+ *
+ * @param {import("express").Request} req - Express request object.
+ * @param {import("express").Response} res - Express response object.
+ * @param {import("express").NextFunction} next - Express next middleware function.
  */
 const validate = (req, res, next) => {
   const errors = validationResult(req);

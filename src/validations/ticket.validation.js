@@ -1,5 +1,16 @@
 const { body, param } = require("express-validator");
 
+/**
+ * Middleware untuk validasi input saat membuat ticket
+ *
+ * Validasi:
+ * - eventId: wajib, UUID
+ * - name: wajib, string
+ * - price: wajib, float positif
+ * - quota: wajib, integer positif
+ * - sold: wajib, integer positif
+ * - description: opsional, string
+ */
 const createTicketValidation = [
   body("eventId")
     .notEmpty()
@@ -32,6 +43,13 @@ const createTicketValidation = [
     .withMessage("Description must be a string"),
 ];
 
+/**
+ * Middleware untuk validasi input saat mengupdate ticket
+ *
+ * Validasi:
+ * - id (param): wajib, UUID
+ * - name, price, quota, sold, description: opsional, dengan tipe dan batasan yang sesuai
+ */
 const updateTicketValidation = [
   param("id")
     .notEmpty()
@@ -57,6 +75,12 @@ const updateTicketValidation = [
     .withMessage("Description must be a string"),
 ];
 
+/**
+ * Middleware untuk validasi input saat menghapus ticket
+ *
+ * Validasi:
+ * - id (param): wajib, UUID
+ */
 const deleteTicketValidation = [
   param("id")
     .notEmpty()
