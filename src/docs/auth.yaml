@@ -6,11 +6,11 @@ info:
 tags:
   - name: Auth
     description: Authentication routes
-
 paths:
   /api/auth/register:
     post:
       summary: Register a new user
+      security: []
       tags:
         - Auth
       requestBody:
@@ -53,6 +53,7 @@ paths:
   /api/auth/login:
     post:
       summary: Login a user
+      security: []
       tags:
         - Auth
       requestBody:
@@ -61,7 +62,7 @@ paths:
           application/json:
             schema:
               type: object
-              properties:
+            properties:
                 email:
                   type: string
                   description: User's email address

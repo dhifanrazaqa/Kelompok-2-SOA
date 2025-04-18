@@ -23,12 +23,14 @@ const options = {
       version: "1.0.0",
       description: "Event Organizer API with Swagger",
     },
-    servers: [
-      {
-        url: "http://localhost:3000", // Base server URL
-      },
-    ],
     components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
       ...authDocs.components,
       ...cacheDocs.components,
       ...checklistDocs.components,
@@ -42,6 +44,16 @@ const options = {
       ...userDocs.components,
       ...venueDocs.components,
     },
+    security: [
+      {
+        BearerAuth: [],
+      },
+    ],
+    servers: [
+      {
+        url: "http://localhost:3000", // Base server URL
+      },
+    ],
     paths: {
       ...authDocs.paths,
       ...cacheDocs.paths,
