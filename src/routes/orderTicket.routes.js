@@ -13,7 +13,7 @@ const {
   deleteOrderTicketValidation,
 } = require("../validations/orderTicket.validation");
 const { validate } = require("../utils/validation");
-const { authenticate } = require("../middlewares/auth.middleware");
+const { authenticate, authorize } = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 
@@ -30,6 +30,7 @@ router.post(
 router.put(
   "/:id",
   authenticate,
+  authorize(['ADMIN']),
   updateOrderTicketValidation,
   validate,
   updateOrderTicket
@@ -37,6 +38,7 @@ router.put(
 router.delete(
   "/:id",
   authenticate,
+  authorize(['ADMIN']),
   deleteOrderTicketValidation,
   validate,
   deleteOrderTicket

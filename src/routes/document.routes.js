@@ -12,15 +12,15 @@ const {
   deleteDocumentValidation,
 } = require("../validations/document.validaton");
 const { validate } = require("../utils/validation");
-const { authenticate } = require("../middlewares/auth.middleware");
+const { authenticate, authorize } = require("../middlewares/auth.middleware");
 const upload = require("../middlewares/upload.middleware");
 
 const router = express.Router();
 
-router.get("/", authenticate, getAllDocuments);
-router.get("/:id", authenticate, getDocumentById);
-router.post("/", authenticate, upload.single('document'),  createDocumentValidation, validate, createDocument);
-router.put("/:id", authenticate, updateDocumentValidation, validate, updateDocument);
-router.delete("/:id", authenticate, deleteDocumentValidation, validate, deleteDocument);
+router.get("/", authenticate, authorize(['ADMIN', 'ORGANIZER']), getAllDocuments);
+router.get("/:id", authenticate, authorize(['ADMIN', 'ORGANIZER']), getDocumentById);
+router.post("/", authenticate, authorize(['ADMIN', 'ORGANIZER']), upload.single('document'),  createDocumentValidation, validate, createDocument);
+router.put("/:id", authenticate, authorize(['ADMIN', 'ORGANIZER']), updateDocumentValidation, validate, updateDocument);
+router.delete("/:id", authenticate, authorize(['ADMIN', 'ORGANIZER']), deleteDocumentValidation, validate, deleteDocument);
 
 module.exports = router;

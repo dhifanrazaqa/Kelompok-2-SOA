@@ -12,7 +12,7 @@ const {
   deleteOrderEventValidation,
 } = require("../validations/orderEvent.validation");
 const { validate } = require("../utils/validation");
-const { authenticate } = require("../middlewares/auth.middleware");
+const { authenticate, authorize } = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 
@@ -28,6 +28,7 @@ router.post(
 router.put(
   "/:id",
   authenticate,
+  authorize(['ADMIN']),
   updateOrderEventValidation,
   validate,
   updateOrderEvent
@@ -35,6 +36,7 @@ router.put(
 router.delete(
   "/:id",
   authenticate,
+  authorize(['ADMIN']),
   deleteOrderEventValidation,
   validate,
   deleteOrderEvent

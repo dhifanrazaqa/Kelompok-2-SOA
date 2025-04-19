@@ -17,9 +17,9 @@ const { authenticate, authorize } = require("../middlewares/auth.middleware");
 const router = express.Router();
 
 router.get("/", authenticate, authorize(['ADMIN', 'ORGANIZER']), getAllChecklists);
-router.get("/:id", authenticate, getChecklistById);
-router.post("/", authenticate, createChecklistValidation, validate, createChecklist);
-router.put("/:id", authenticate, updateChecklistValidation, validate, updateChecklist);
-router.delete("/:id", authenticate, deleteChecklistValidation, validate, deleteChecklist);
+router.get("/:id", authenticate, authorize(['ADMIN', 'ORGANIZER']), getChecklistById);
+router.post("/", authenticate, authorize(['ADMIN', 'ORGANIZER']), createChecklistValidation, validate, createChecklist);
+router.put("/:id", authenticate, authorize(['ADMIN', 'ORGANIZER']), updateChecklistValidation, validate, updateChecklist);
+router.delete("/:id", authenticate, authorize(['ADMIN', 'ORGANIZER']), deleteChecklistValidation, validate, deleteChecklist);
 
 module.exports = router;
