@@ -8,7 +8,7 @@ const logger = require("../config/logger");
  */
 const generateToken = (payload) => {
   return jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: "30m", // Token expires in 3 minute
+    expiresIn: "30m", // Token expires in 30 minute
   });
 };
 
