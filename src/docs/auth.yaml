@@ -43,7 +43,7 @@ paths:
                 role:
                   type: string
                   description: User's role (must be PARTICIPANT, ORGANIZER, or ADMIN)
-                  example: PARTICIPANT
+                  example: ADMIN
       responses:
         201:
           description: User registered successfully
