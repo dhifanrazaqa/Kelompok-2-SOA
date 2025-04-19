@@ -72,7 +72,7 @@ const createDocument = async (req, res) => {
         url: result.secure_url,
       },
     });
-    sendSuccess(res, "Document created successfully", document);
+    sendSuccess(res, "Document created successfully", document, 201);
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to create document", error, 500);

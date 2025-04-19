@@ -110,7 +110,7 @@ const createTicket = async (req, res) => {
       },
     });
 
-    sendSuccess(res, "Ticket created successfully", ticket);
+    sendSuccess(res, "Ticket created successfully", ticket, 201);
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to create ticket", error, 500);

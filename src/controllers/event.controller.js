@@ -387,7 +387,7 @@ const createEvent = async (req, res) => {
         status,
       },
     });
-    sendSuccess(res, "Event created successfully", null);
+    sendSuccess(res, "Event created successfully", null, 201);
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to create event", error, 500);

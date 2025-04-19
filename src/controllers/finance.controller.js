@@ -45,7 +45,7 @@ const createFinance = async (req, res) => {
   try {
     const data = req.body;
     const finance = await prisma.finance.create({ data });
-    sendSuccess(res, "Finance created successfully", finance);
+    sendSuccess(res, "Finance created successfully", finance, 201);
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to create finance", error, 500);

@@ -39,7 +39,7 @@ const register = async (req, res) => {
       data: { name, email, password: hashedPassword, phone, address, role },
     });
 
-    sendSuccess(res, "User created successfully", null);
+    sendSuccess(res, "User created successfully", null, 201);
   } catch (error) {
     console.error(error);
     sendError(

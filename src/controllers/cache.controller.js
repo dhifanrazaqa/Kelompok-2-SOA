@@ -48,7 +48,7 @@ const registerUserCache = async (req, res) => {
     const cacheKey = `user:${user.id}`;
     await redis.set(cacheKey, JSON.stringify(user), "EX", 3600);
 
-    sendSuccess(res, "User created successfully", user);
+    sendSuccess(res, "User created successfully", user, 201);
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to create user", [
@@ -187,7 +187,7 @@ const createEvent = async (req, res) => {
     const cacheKey = `event:${event.id}`;
     await redis.set(cacheKey, JSON.stringify(event), "EX", 3600);
 
-    sendSuccess(res, "Event created successfully", null);
+    sendSuccess(res, "Event created successfully", null, 201);
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to create event", error, 500);

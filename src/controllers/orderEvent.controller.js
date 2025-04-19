@@ -77,7 +77,7 @@ const createOrderEvent = async (req, res) => {
       },
     });
 
-    sendSuccess(res, "Order Event created successfully", orderEvent);
+    sendSuccess(res, "Order Event created successfully", orderEvent, 201);
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to create Order Event", error, 500);

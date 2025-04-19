@@ -61,7 +61,7 @@ const createChecklist = async (req, res) => {
         progress,
       },
     });
-    sendSuccess(res, "Checklist created successfully", checklist);
+    sendSuccess(res, "Checklist created successfully", checklist, 201);
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to create checklist", error, 500);

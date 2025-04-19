@@ -212,7 +212,7 @@ const createOrderTicket = async (req, res) => {
 
     console.log(result);
 
-    sendSuccess(res, "Order Ticket created successfully", orderTicket);
+    sendSuccess(res, "Order Ticket created successfully", orderTicket, 201);
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to create Order Ticket", error, 500);

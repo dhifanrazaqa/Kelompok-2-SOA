@@ -112,7 +112,7 @@ const createVenue = async (req, res) => {
       },
     });
 
-    sendSuccess(res, "Venue created successfully", venue);
+    sendSuccess(res, "Venue created successfully", venue, 201);
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to create venue", error, 500);

@@ -414,7 +414,7 @@ const createOrganization = async (req, res) => {
       data: orgData,
     });
 
-    sendSuccess(res, "Organization created successfully", organization);
+    sendSuccess(res, "Organization created successfully", organization, 201);
   } catch (error) {
     console.error(error);
     sendError(
