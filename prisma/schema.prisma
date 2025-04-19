@@ -31,7 +31,7 @@ model User {
 model Organizer {
   id               String   @id @default(uuid())
   userId           String   @unique
-  user             User     @relation(fields: [userId], references: [id])
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   organizationName String
   contactName      String
   contactPhone     String
@@ -48,7 +48,7 @@ model Event {
   target      EventTarget
   budgetRange BudgetRange
   organizerId String
-  organizer   Organizer     @relation(fields: [organizerId], references: [id])
+  organizer   Organizer     @relation(fields: [organizerId], references: [id], onDelete: Cascade)
   thumbnail   String?
   description String
   startDate   DateTime
@@ -77,7 +77,7 @@ model Venue {
   capacity  Int
   latitude  Decimal
   longitude Decimal
-  event     Event    @relation(fields: [eventId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -88,7 +88,7 @@ model Checklist {
   title      String
   description String?
   progress   Int
-  event      Event    @relation(fields: [eventId], references: [id])
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -98,7 +98,7 @@ model Document {
   eventId    String
   name       String
   url        String
-  event      Event    @relation(fields: [eventId], references: [id])
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -110,7 +110,7 @@ model Finance {
   target        Float
   sponsor       Float
   ticketRevenue Float
-  event         Event    @relation(fields: [eventId], references: [id])
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
@@ -118,7 +118,7 @@ model Finance {
 model Ticket {
   id          String        @id @default(uuid())
   eventId     String
-  event       Event         @relation(fields: [eventId], references: [id])
+  event       Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
   name        String
   price       Float
   quota       Int
@@ -132,11 +132,11 @@ model Ticket {
 model OrderTicket {
   id            String        @id @default(uuid())
   userId        String
-  user          User          @relation(fields: [userId], references: [id])
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   ticketId      String
-  ticket        Ticket        @relation(fields: [ticketId], references: [id])
+  ticket        Ticket        @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   eventId       String
-  event         Event         @relation(fields: [eventId], references: [id])
+  event         Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
   quantity      Int
   totalPrice    Decimal
   paymentStatus paymentStatus
@@ -148,9 +148,9 @@ model OrderTicket {
 model OrderEvent {
   id            String        @id @default(uuid())
   userId        String
-  user          User          @relation(fields: [userId], references: [id])
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   eventId       String
-  event         Event         @relation(fields: [eventId], references: [id])
+  event         Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
   title         String
   description   String?
   totalPrice    Decimal
