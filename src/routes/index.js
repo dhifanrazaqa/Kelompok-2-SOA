@@ -22,7 +22,7 @@ router.use("/events", eventRoutes);
 router.use("/venue", venueRoutes);
 router.use("/checklists", checklistRoutes);
 router.use("/documents", dcoumentRoutes);
-router.use("/finance", financeRoutes);
+router.use("/finances", financeRoutes);
 router.use("/ticket/order", orderTicketRoutes);
 router.use("/ticket", ticketRoutes);
 router.use("/cache", cacheRoutes);

@@ -52,7 +52,7 @@ paths:
                 eventId:
                   type: string
                   description: The ID of the event for which the ticket is created
-                  example: "event123"
+                  example: "4e76b30f-351a-461c-a8f0-c4569c82dde3"
                 quota:
                   type: integer
                   description: The total number of tickets available

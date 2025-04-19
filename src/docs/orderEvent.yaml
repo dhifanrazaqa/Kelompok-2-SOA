@@ -7,7 +7,7 @@ tags:
   - name: Order Events
     description: Order management routes for events
 paths:
-  /api/order-event:
+  /api/event/order:
     get:
       summary: Get all order events
       tags:
@@ -26,24 +26,50 @@ paths:
             schema:
               type: object
               properties:
-                eventId:
-                  type: string
-                  description: The event ID for the order
-                  example: "12345"
                 userId:
                   type: string
-                  description: The user ID for the order
-                  example: "67890"
-                quantity:
-                  type: integer
-                  description: The number of tickets to be ordered
-                  example: 2
+                  description: The user ID for the order (must be a valid UUID)
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+                eventId:
+                  type: string
+                  description: The event ID for the order (must be a valid UUID)
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                title:
+                  type: string
+                  description: The title of the order
+                  example: "Tech Conference 2026"
+                description:
+                  type: string
+                  description: Additional details about the order (optional)
+                  example: "Tech Conference 2026 is a premier event for tech enthusiasts."
+                  nullable: true
+                totalPrice:
+                  type: number
+                  format: decimal
+                  description: The total price of the order
+                  example: 99.99
+                paymentStatus:
+                  type: string
+                  description: The payment status of the order
+                  enum:
+                    - PENDING
+                    - COMPLETED
+                    - FAILED
+                  example: "PENDING"
+                orderStatus:
+                  type: string
+                  description: The order status
+                  enum:
+                    - PENDING
+                    - CONFIRMED
+                    - CANCELLED
+                  example: "CONFIRMED"
       responses:
         201:
           description: Order event created successfully
         400:
           description: Invalid input
-  /api/order-event/{id}:
+  /api/event/order/{id}:
     get:
       summary: Get order event by ID
       tags:
@@ -78,10 +104,36 @@ paths:
             schema:
               type: object
               properties:
-                quantity:
-                  type: integer
-                  description: The updated number of tickets
-                  example: 3
+                title:
+                  type: string
+                  description: The title of the order
+                  example: "Tech Conference 2026"
+                description:
+                  type: string
+                  description: Additional details about the order (optional)
+                  example: "Tech Conference 2026 is a premier event for tech enthusiasts."
+                  nullable: true
+                totalPrice:
+                  type: number
+                  format: decimal
+                  description: The total price of the order
+                  example: 99.99
+                paymentStatus:
+                  type: string
+                  description: The payment status of the order
+                  enum:
+                    - PENDING
+                    - COMPLETED
+                    - FAILED
+                  example: "PENDING"
+                orderStatus:
+                  type: string
+                  description: The order status
+                  enum:
+                    - PENDING
+                    - CONFIRMED
+                    - CANCELLED
+                  example: "CONFIRMED"
       responses:
         200:
           description: Order event updated successfully

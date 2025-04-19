@@ -19,7 +19,7 @@ const router = express.Router();
 
 router.get("/", authenticate, getAllDocuments);
 router.get("/:id", authenticate, getDocumentById);
-router.post("/", authenticate, upload.single('image'),  createDocumentValidation, validate, createDocument);
+router.post("/", authenticate, upload.single('document'),  createDocumentValidation, validate, createDocument);
 router.put("/:id", authenticate, updateDocumentValidation, validate, updateDocument);
 router.delete("/:id", authenticate, deleteDocumentValidation, validate, deleteDocument);
 

@@ -7,7 +7,7 @@ tags:
   - name: Users
     description: Operations related to user data
 paths:
-  /api/user/{id}/tickets:
+  /api/users/{id}/tickets:
     get:
       summary: Get all tickets ordered by a specific user
       tags:
@@ -22,7 +22,7 @@ paths:
       responses:
         200:
           description: List of tickets ordered by the user
-  /api/user/{id}/organizer:
+  /api/users/{id}/organizer:
     get:
       summary: Get the organizer information of a specific user
       tags:
@@ -37,7 +37,7 @@ paths:
       responses:
         200:
           description: User organizer details
-  /api/user/{id}/order/tickets:
+  /api/users/{id}/order/tickets:
     get:
       summary: Get all tickets ordered by the user
       tags:
@@ -52,7 +52,7 @@ paths:
       responses:
         200:
           description: List of tickets ordered by the user
-  /api/user/{id}/order/events:
+  /api/users/{id}/order/events:
     get:
       summary: Get all events ordered by the user
       tags:
@@ -67,7 +67,7 @@ paths:
       responses:
         200:
           description: List of events ordered by the user
-  /api/user:
+  /api/users:
     get:
       summary: Get all users
       tags:
@@ -75,7 +75,7 @@ paths:
       responses:
         200:
           description: A list of all users
-  /api/user/{id}:
+  /api/users/{id}:
     get:
       summary: Get user by ID
       tags:

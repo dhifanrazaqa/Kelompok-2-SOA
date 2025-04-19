@@ -43,10 +43,18 @@ paths:
             schema:
               type: object
               properties:
+                eventId:
+                  type: string
+                  description: ID of the associated event
+                  example: "550e8400-e29b-41d4-a716-446655440000"
                 name:
                   type: string
                   description: Name of the venue
                   example: "Central Park"
+                address:
+                  type: string
+                  description: Address of the venue
+                  example: "123 Main St"
                 city:
                   type: string
                   description: City where the venue is located
@@ -55,6 +63,16 @@ paths:
                   type: integer
                   description: Maximum capacity of the venue
                   example: 5000
+                latitude:
+                  type: number
+                  format: float
+                  description: Latitude coordinate of the venue
+                  example: 40.785091
+                longitude:
+                  type: number
+                  format: float
+                  description: Longitude coordinate of the venue
+                  example: -73.968285
       responses:
         201:
           description: Venue created successfully
@@ -98,7 +116,11 @@ paths:
                 name:
                   type: string
                   description: Name of the venue
-                  example: "Updated Central Park"
+                  example: "Central Park"
+                address:
+                  type: string
+                  description: Address of the venue
+                  example: "123 Main St"
                 city:
                   type: string
                   description: City where the venue is located
@@ -106,7 +128,17 @@ paths:
                 capacity:
                   type: integer
                   description: Maximum capacity of the venue
-                  example: 6000
+                  example: 5000
+                latitude:
+                  type: number
+                  format: float
+                  description: Latitude coordinate of the venue
+                  example: 40.785091
+                longitude:
+                  type: number
+                  format: float
+                  description: Longitude coordinate of the venue
+                  example: -73.968285
       responses:
         200:
           description: Venue updated successfully

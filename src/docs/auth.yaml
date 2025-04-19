@@ -62,7 +62,7 @@ paths:
           application/json:
             schema:
               type: object
-            properties:
+              properties:
                 email:
                   type: string
                   description: User's email address

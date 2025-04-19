@@ -65,12 +65,6 @@ const updateOrderEventValidation = [
     .withMessage("Order status must be one of PENDING, CONFIRMED, or CANCELLED"),
 ];
 
-/**
- * Middleware untuk validasi input saat menghapus order event
- *
- * Validasi:
- * - id (param): wajib, UUID
- */
 const deleteOrderEventValidation = [
   param("id")
     .notEmpty()

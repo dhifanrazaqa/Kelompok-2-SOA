@@ -1,4 +1,5 @@
 const prisma = require("../config/database");
+const logger = require("../config/logger");
 const redis = require("../config/redis");
 const { sendSuccess, sendError } = require("../utils/response");
 
@@ -12,7 +13,7 @@ const getAllEvents = async (req, res) => {
     await redis.set(cacheKey, JSON.stringify(events), "EX", 60);
     sendSuccess(res, "Events retrieved successfully", events);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve events", error, 500);
   }
 };
@@ -78,12 +79,14 @@ const getEventById = async (req, res) => {
 
     if (!event) return sendError(res, "Event not found", [], 404);
 
-    event.venue.locationImage = `https://maps.googleapis.com/maps/api/staticmap?center=${event.venue.latitude},${event.venue.longitude}&zoom=15&size=600x300&markers=color:red%7C${event.venue.latitude},${event.venue.longitude}&key=${process.env.MAPS_API_KEY}`;
+    if (event.venue) {
+      event.venue.locationImage = `https://maps.googleapis.com/maps/api/staticmap?center=${event.venue.latitude},${event.venue.longitude}&zoom=15&size=600x300&markers=color:red%7C${event.venue.latitude},${event.venue.longitude}&key=${process.env.MAPS_API_KEY}`;
+    }
 
     await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
     sendSuccess(res, "Event retrieved successfully", event);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve event", error, 500);
   }
 };
@@ -258,7 +261,11 @@ const getMostPopularEvents = async (req, res) => {
       return sendError(res, "No events found", [], 404);
 
     await redis.set(cacheKey, JSON.stringify(sortedEvents), "EX", 60);
-    sendSuccess(res, "Most popular events retrieved successfully", sortedEvents);
+    sendSuccess(
+      res,
+      "Most popular events retrieved successfully",
+      sortedEvents
+    );
   } catch (error) {
     console.error(error);
     sendError(res, "Failed to retrieve most popular events", error, 500);
@@ -473,7 +480,7 @@ const deleteEvent = async (req, res) => {
       return sendError(res, "Event not found", [
         { field: "id", message: "Event with the provided ID does not exist" },
       ]);
-
+    console.log(isEventExist);
     await prisma.event.delete({ where: { id } });
     sendSuccess(res, "Event deleted successfully", null);
   } catch (error) {

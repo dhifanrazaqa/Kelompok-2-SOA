@@ -25,7 +25,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -38,15 +38,14 @@ paths:
                   type: string
                   description: Name of the document
                   example: "Event Proposal"
-                url:
+                document:
                   type: string
-                  format: uri
-                  description: URL to access the document
-                  example: "https://example.com/documents/proposal.pdf"
+                  format: binary
+                  description: The file to be uploaded
               required:
                 - eventId
                 - name
-                - url
+                - document
       responses:
         201:
           description: Document created successfully
