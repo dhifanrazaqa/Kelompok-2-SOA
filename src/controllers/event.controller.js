@@ -120,7 +120,7 @@ const getEventTickets = async (req, res) => {
     await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
     sendSuccess(res, "Event with tickets retrieved successfully", event);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve event with tickets", error, 500);
   }
 };
@@ -152,7 +152,7 @@ const getEventChecklist = async (req, res) => {
     await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
     sendSuccess(res, "Event with checklist retrieved successfully", event);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve event with checklist", error, 500);
   }
 };
@@ -183,7 +183,7 @@ const getEventDocuments = async (req, res) => {
     await redis.set(cacheKey, JSON.stringify(event), "EX", 60);
     sendSuccess(res, "Event with documents retrieved successfully", event);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve event with documents", error, 500);
   }
 };
@@ -221,7 +221,7 @@ const getEventParticipants = async (req, res) => {
     if (!event) return sendError(res, "Event not found", [], 404);
     sendSuccess(res, "Event with participants retrieved successfully", event);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve event with participants", error, 500);
   }
 };
@@ -267,7 +267,7 @@ const getMostPopularEvents = async (req, res) => {
       sortedEvents
     );
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve most popular events", error, 500);
   }
 };
@@ -326,7 +326,7 @@ const getUpcomingEvents = async (req, res) => {
 
     sendSuccess(res, "Upcoming events retrieved successfully", upcomingEvents);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve upcoming events", error, 500);
   }
 };
@@ -396,7 +396,7 @@ const createEvent = async (req, res) => {
     });
     sendSuccess(res, "Event created successfully", null, 201);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to create event", error, 500);
   }
 };
@@ -460,7 +460,7 @@ const updateEvent = async (req, res) => {
     });
     sendSuccess(res, "Event updated successfully", event);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to update event", error, 500);
   }
 };
@@ -480,11 +480,11 @@ const deleteEvent = async (req, res) => {
       return sendError(res, "Event not found", [
         { field: "id", message: "Event with the provided ID does not exist" },
       ]);
-    console.log(isEventExist);
+    logger.log(isEventExist);
     await prisma.event.delete({ where: { id } });
     sendSuccess(res, "Event deleted successfully", null);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to delete event", error, 500);
   }
 };

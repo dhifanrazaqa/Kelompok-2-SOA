@@ -2,6 +2,7 @@ const prisma = require("../config/database");
 const sendEmail = require("../config/mail");
 const PDFDocument = require("pdfkit");
 const { sendSuccess, sendError } = require("../utils/response");
+const logger = require("../config/logger");
 
 /**
  * Retrieve all order tickets.
@@ -11,7 +12,7 @@ const getAllOrderTickets = async (req, res) => {
     const orderTickets = await prisma.orderTicket.findMany();
     sendSuccess(res, "Order Tickets retrieved successfully", orderTickets);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve Order Tickets", error, 500);
   }
 };
@@ -111,7 +112,7 @@ const getOrderTicketByIdInvoice = async (req, res) => {
 
     doc.end();
   } catch (error) {
-    console.error("Failed to generate invoice PDF:", error);
+    logger.error("Failed to generate invoice PDF:", error);
     sendError(res, "Failed to generate PDF invoice", error, 500);
   }
 };
@@ -129,7 +130,7 @@ const getOrderTicketById = async (req, res) => {
     if (!orderTicket) return sendError(res, "Order Ticket not found", [], 404);
     sendSuccess(res, "Order Ticket retrieved successfully", orderTicket);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve Order Ticket", error, 500);
   }
 };
@@ -210,11 +211,11 @@ const createOrderTicket = async (req, res) => {
       "Thank you for your order. Please complete the payment as soon as possible to confirm your ticket."
     );
 
-    console.log(result);
+    logger.log(result);
 
     sendSuccess(res, "Order Ticket created successfully", orderTicket, 201);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to create Order Ticket", error, 500);
   }
 };
@@ -256,7 +257,7 @@ const updateOrderTicket = async (req, res) => {
 
     sendSuccess(res, "Order Ticket updated successfully", orderTicket);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to update Order Ticket", error, 500);
   }
 };
@@ -284,7 +285,7 @@ const deleteOrderTicket = async (req, res) => {
     await prisma.orderTicket.delete({ where: { id } });
     sendSuccess(res, "Order Ticket deleted successfully", null);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to delete Order Ticket", error, 500);
   }
 };

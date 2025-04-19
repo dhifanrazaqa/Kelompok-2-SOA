@@ -1,6 +1,7 @@
 const { extractTokenFromHeader, verifyToken } = require("../utils/token");
 const { sendError } = require("../utils/response");
 const prisma = require("../config/database");
+const logger = require("../config/logger");
 
 /**
  * Middleware to authenticate a user using JWT token from the Authorization header
@@ -59,7 +60,7 @@ const authenticate = async (req, res, next) => {
     // Proceed to next middleware
     next();
   } catch (error) {
-    console.error("Auth error:", error);
+    logger.error("Auth error:", error);
     sendError(
       res,
       "Authentication error",
@@ -92,7 +93,7 @@ const authorize = (allowedRoles) => {
       // Proceed to next middleware
       next();
     } catch (error) {
-      console.error("Authorization error:", error);
+      logger.error("Authorization error:", error);
       sendError(
         res,
         "Authorization error",

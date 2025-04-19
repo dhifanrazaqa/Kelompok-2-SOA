@@ -2,6 +2,7 @@ const prisma = require("../config/database");
 const { sendSuccess, sendError } = require("../utils/response");
 const { hashPassword, verifyPassword } = require("../utils/password");
 const { generateToken } = require("../utils/token");
+const logger = require("../config/logger");
 
 /**
  * Function to handle the registration process for new users
@@ -41,7 +42,7 @@ const register = async (req, res) => {
 
     sendSuccess(res, "User created successfully", null, 201);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to create user",
@@ -89,7 +90,7 @@ const login = async (req, res) => {
 
     sendSuccess(res, "Login successful", { token }, 200);
   } catch (error) {
-    console.error("Login error:", error);
+    logger.error("Login error:", error);
     sendError(
       res,
       "Login failed",

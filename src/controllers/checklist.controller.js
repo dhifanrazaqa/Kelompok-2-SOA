@@ -1,4 +1,5 @@
 const prisma = require("../config/database");
+const logger = require("../config/logger");
 const { sendSuccess, sendError } = require("../utils/response");
 
 /**
@@ -9,7 +10,7 @@ const getAllChecklists = async (req, res) => {
     const checklists = await prisma.checklist.findMany();
     sendSuccess(res, "Checklists retrieved successfully", checklists);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve checklists", error, 500);
   }
 };
@@ -28,7 +29,7 @@ const getChecklistById = async (req, res) => {
       return sendError(res, "Checklist not found", [], 404);
     sendSuccess(res, "Checklist retrieved successfully", checklist);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve checklist", error, 500);
   }
 };
@@ -63,7 +64,7 @@ const createChecklist = async (req, res) => {
     });
     sendSuccess(res, "Checklist created successfully", checklist, 201);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to create checklist", error, 500);
   }
 };
@@ -99,7 +100,7 @@ const updateChecklist = async (req, res) => {
     });
     sendSuccess(res, "Checklist updated successfully", checklist);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to update checklist", error, 500);
   }
 };
@@ -124,7 +125,7 @@ const deleteChecklist = async (req, res) => {
     await prisma.checklist.delete({ where: { id } });
     sendSuccess(res, "Checklist deleted successfully", null);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to delete checklist", error, 500);
   }
 };

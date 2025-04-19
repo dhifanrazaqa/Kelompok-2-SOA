@@ -1,4 +1,5 @@
 const prisma = require("../config/database");
+const logger = require("../config/logger");
 const { sendSuccess, sendError } = require("../utils/response");
 
 /**
@@ -9,7 +10,7 @@ const getAllOrderEvents = async (req, res) => {
     const orderEvents = await prisma.orderEvent.findMany();
     sendSuccess(res, "Order Events retrieved successfully", orderEvents);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve order events", error, 500);
   }
 };
@@ -28,7 +29,7 @@ const getOrderEventById = async (req, res) => {
       return sendError(res, "Order Event not found", [], 404);
     sendSuccess(res, "Order Event retrieved successfully", orderEvent);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve Order Event", error, 500);
   }
 };
@@ -79,7 +80,7 @@ const createOrderEvent = async (req, res) => {
 
     sendSuccess(res, "Order Event created successfully", orderEvent, 201);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to create Order Event", error, 500);
   }
 };
@@ -120,7 +121,7 @@ const updateOrderEvent = async (req, res) => {
 
     sendSuccess(res, "Order Event updated successfully", orderEvent);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to update Order Event", error, 500);
   }
 };
@@ -145,7 +146,7 @@ const deleteOrderEvent = async (req, res) => {
     await prisma.orderEvent.delete({ where: { id } });
     sendSuccess(res, "Order Event deleted successfully", null);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to delete Order Event", error, 500);
   }
 };

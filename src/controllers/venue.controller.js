@@ -1,4 +1,5 @@
 const prisma = require("../config/database");
+const logger = require("../config/logger");
 const { sendSuccess, sendError } = require("../utils/response");
 
 /**
@@ -14,7 +15,7 @@ const getAllVenues = async (req, res) => {
 
     sendSuccess(res, "Venues retrieved successfully", venues);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve venues", error, 500);
   }
 };
@@ -36,7 +37,7 @@ const getVenueById = async (req, res) => {
 
     sendSuccess(res, "Venue retrieved successfully", venue);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve venue", error, 500);
   }
 };
@@ -59,7 +60,7 @@ const getEventByVenueCity = async (req, res) => {
 
     sendSuccess(res, "Events retrieved successfully", { events });
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve events", error, 500);
   }
 };
@@ -114,7 +115,7 @@ const createVenue = async (req, res) => {
 
     sendSuccess(res, "Venue created successfully", venue, 201);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to create venue", error, 500);
   }
 };
@@ -157,7 +158,7 @@ const updateVenue = async (req, res) => {
 
     sendSuccess(res, "Venue updated successfully", venue);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to update venue", error, 500);
   }
 };
@@ -183,7 +184,7 @@ const deleteVenue = async (req, res) => {
 
     sendSuccess(res, "Venue deleted successfully", null);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to delete venue", error, 500);
   }
 };

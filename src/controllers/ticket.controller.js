@@ -1,4 +1,5 @@
 const prisma = require("../config/database");
+const logger = require("../config/logger");
 const { sendSuccess, sendError } = require("../utils/response");
 
 /**
@@ -9,7 +10,7 @@ const getAllTickets = async (req, res) => {
     const tickets = await prisma.ticket.findMany();
     sendSuccess(res, "Tickets retrieved successfully", tickets);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve tickets", error, 500);
   }
 };
@@ -29,7 +30,7 @@ const getTicketById = async (req, res) => {
 
     sendSuccess(res, "Ticket retrieved successfully", ticket);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve ticket", error, 500);
   }
 };
@@ -69,7 +70,7 @@ const getTicketBuyers = async (req, res) => {
 
     sendSuccess(res, "Ticket with buyers retrieved successfully", ticket);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve ticket with buyers", error, 500);
   }
 };
@@ -112,7 +113,7 @@ const createTicket = async (req, res) => {
 
     sendSuccess(res, "Ticket created successfully", ticket, 201);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to create ticket", error, 500);
   }
 };
@@ -153,7 +154,7 @@ const updateTicket = async (req, res) => {
 
     sendSuccess(res, "Ticket updated successfully", ticket);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to update ticket", error, 500);
   }
 };
@@ -178,7 +179,7 @@ const deleteTicket = async (req, res) => {
     await prisma.ticket.delete({ where: { id } });
     sendSuccess(res, "Ticket deleted successfully", null);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to delete ticket", error, 500);
   }
 };

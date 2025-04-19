@@ -2,6 +2,7 @@ const { sendSuccess, sendError } = require("../utils/response");
 const prisma = require("../config/database");
 const redis = require("../config/redis");
 const { paymentStatus, orderStatus } = require("@prisma/client");
+const logger = require("../config/logger");
 
 /**
  * Retrieve all users
@@ -20,7 +21,7 @@ const getAllUsers = async (req, res) => {
     });
     sendSuccess(res, "Users retrieved successfully", users);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve user",
@@ -66,7 +67,7 @@ const getUserById = async (req, res) => {
 
     sendSuccess(res, "User retrieved successfully", user);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve user",
@@ -128,7 +129,7 @@ const getUserTickets = async (req, res) => {
 
     sendSuccess(res, "User with tickets retrieved successfully", user);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve user with tickets",
@@ -172,7 +173,7 @@ const getUserOrganizer = async (req, res) => {
 
     sendSuccess(res, "User with organizer retrieved successfully", user);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve user with organizer",
@@ -232,7 +233,7 @@ const getUserOrderTickets = async (req, res) => {
 
     sendSuccess(res, "User with orders retrieved successfully", user);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve user with orders",
@@ -291,7 +292,7 @@ const getUserOrderEvents = async (req, res) => {
 
     sendSuccess(res, "User with orders retrieved successfully", user);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve user with orders",
@@ -348,7 +349,7 @@ const updateUser = async (req, res) => {
 
     sendSuccess(res, "User updated successfully", updatedUser);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to update user",
@@ -386,7 +387,7 @@ const deleteUser = async (req, res) => {
 
     sendSuccess(res, "User deleted successfully", null);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to delete user",

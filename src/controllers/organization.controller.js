@@ -1,4 +1,5 @@
 const prisma = require("../config/database");
+const logger = require("../config/logger");
 const redis = require("../config/redis");
 const { sendSuccess, sendError } = require("../utils/response");
 
@@ -10,7 +11,7 @@ const getAllOrganizations = async (req, res) => {
     const organizations = await prisma.organizer.findMany();
     sendSuccess(res, "Organizations retrieved successfully", organizations);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve organizations",
@@ -50,7 +51,7 @@ const getOrganizationById = async (req, res) => {
     await redis.set(cacheKey, JSON.stringify(organization), 'EX', 60);
     sendSuccess(res, "Organization retrieved successfully", organization);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve organization",
@@ -87,7 +88,7 @@ const getOrganizerEvents = async (req, res) => {
 
     sendSuccess(res, "Organizer retrieved successfully", organizer);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve organizer", error, 500);
   }
 };
@@ -128,7 +129,7 @@ const getOrganizerDashboard = async (req, res) => {
 
     sendSuccess(res, "Dashboard data retrieved successfully", dashboardData);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve dashboard data",
@@ -179,7 +180,7 @@ const getOrganizerEventSummary = async (req, res) => {
 
     sendSuccess(res, "Organizer with event summary retrieved successfully", result);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve organizer with event summary",
@@ -238,7 +239,7 @@ const getOrganizerVenues = async (req, res) => {
 
     sendSuccess(res, "Organizer with venues retrieved successfully", result);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve organizer with venues",
@@ -306,7 +307,7 @@ const getOrganizerTopEvent = async (req, res) => {
     await redis.set(cacheKey, JSON.stringify(result), 'EX', 60);
     sendSuccess(res, "Organizer with top event retrieved successfully", result);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve organizer with top event",
@@ -370,7 +371,7 @@ const getOrganizerTickets = async (req, res) => {
 
     sendSuccess(res, "Organizer with tickets retrieved successfully", result);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to retrieve organizer with tickets",
@@ -416,7 +417,7 @@ const createOrganization = async (req, res) => {
 
     sendSuccess(res, "Organization created successfully", organization, 201);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to create organization",
@@ -468,7 +469,7 @@ const updateOrganization = async (req, res) => {
 
     sendSuccess(res, "Organization updated successfully", updatedOrg);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to update organization",
@@ -509,7 +510,7 @@ const deleteOrganization = async (req, res) => {
 
     sendSuccess(res, "Organization deleted successfully", null);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(
       res,
       "Failed to delete organization",

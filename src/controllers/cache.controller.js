@@ -2,6 +2,7 @@ const { sendSuccess, sendError } = require("../utils/response");
 const { hashPassword } = require("../utils/password");
 const prisma = require("../config/database");
 const redis = require("../config/redis");
+const logger = require("../config/logger");
 
 /**
  * Function to add user cache to redis
@@ -50,7 +51,7 @@ const registerUserCache = async (req, res) => {
 
     sendSuccess(res, "User created successfully", user, 201);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to create user", [
       {
         field: "server",
@@ -79,7 +80,7 @@ const getUserByIdCache = async (req, res) => {
       { field: "cache", message: "No cached data available for this" }
     ], 404);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve user from cache", [
       {
         field: "server",
@@ -110,7 +111,7 @@ const deleteUserCache = async (req, res) => {
 
     sendSuccess(res, "User deleted successfully from cache", null);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to delete user from cache", [
       {
         field: "server",
@@ -189,7 +190,7 @@ const createEvent = async (req, res) => {
 
     sendSuccess(res, "Event created successfully", null, 201);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to create event", error, 500);
   }
 };
@@ -213,7 +214,7 @@ const getEventByIdCache = async (req, res) => {
       { field: "cache", message: "No cached data available for this event" }
     ], 404);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve event from cache", [
       {
         field: "server",
@@ -240,7 +241,7 @@ const getAllEventsCache = async (req, res) => {
       { field: "cache", message: "No cached data available for events" }
     ], 404);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve events from cache", [
       {
         field: "server",
@@ -269,7 +270,7 @@ const getEventChecklistCache = async (req, res) => {
       { field: "cache", message: "No cached data available for this event checklist" }
     ], 404);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve event checklist from cache", [
       {
         field: "server",
@@ -298,7 +299,7 @@ const getEventDocumentCache = async (req, res) => {
       { field: "cache", message: "No cached data available for this event documents" }
     ], 404);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve event documents from cache", [
       {
         field: "server",
@@ -325,7 +326,7 @@ const getEventPopularCache = async (req, res) => {
       { field: "cache", message: "No cached data available for popular events" }
     ], 404);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve popular events from cache", [
       {
         field: "server",
@@ -354,7 +355,7 @@ const getEventTicketsCache = async (req, res) => {
       { field: "cache", message: "No cached data available for this event tickets" }
     ], 404);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve event tickets from cache", [
       {
         field: "server",
@@ -383,7 +384,7 @@ const deleteEventCache = async (req, res) => {
     await redis.del(cacheKey);
     sendSuccess(res, "Event deleted successfully from cache", null);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to delete event from cache", [
       {
         field: "server",
@@ -412,7 +413,7 @@ const getOrganizerByIdCache = async (req, res) => {
       { field: "cache", message: "No cached data available for this organizer" }
     ], 404);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve organizer from cache", [
       {
         field: "server",
@@ -441,7 +442,7 @@ const getOrganizerTopEventCache = async (req, res) => {
       { field: "cache", message: "No cached data available for this organizer's top event" }
     ], 404);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     sendError(res, "Failed to retrieve organizer's top event from cache", [
       {
         field: "server",
